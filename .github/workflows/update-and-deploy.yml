@@ -62,13 +62,16 @@ jobs:
 
       - name: Build and validate dashboard
         run: |
-          IMPORTS="data/raw/census_brazil_hts10.csv.gz"
-          if [ ! -f "$IMPORTS" ]; then IMPORTS="data/source/census_brazil_hts10_2025-01_to_2026-09.csv.gz"; fi
-          python scripts/build_dashboard.py --imports "$IMPORTS"
+          if [ "$GITHUB_EVENT_NAME" != "push" ]; then
+            IMPORTS="data/raw/census_brazil_hts10.csv.gz"
+            if [ ! -f "$IMPORTS" ]; then IMPORTS="data/source/census_brazil_hts10_2025-01_to_2026-09.csv.gz"; fi
+            python scripts/build_dashboard.py --imports "$IMPORTS"
+          fi
           python scripts/validate_data.py
           python -m pytest -q
 
       - name: Commit refreshed public artifacts
+        if: github.event_name != 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
