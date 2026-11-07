@@ -4,6 +4,10 @@
 
 A reproducible GitHub Pages dashboard combining monthly U.S. imports from Brazil with the statutory tariff timeline modeled by The Budget Lab at Yale.
 
+This repository is a **showcase**. The user-facing application and processed data live here; reusable source connectors and access examples belong in the [Official Data API Toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit).
+
+**[Open the public dashboard preview →](https://us-brazil-tariff-monitor.feliperamondbr.chatgpt.site)**
+
 ## Highlights
 
 - Monthly consumption imports since January 2025 at HTS10 detail.
@@ -19,6 +23,12 @@ A reproducible GitHub Pages dashboard combining monthly U.S. imports from Brazil
 2. Add a repository Actions secret named `CENSUS_API_KEY`.
 3. Set **Settings → Pages → Source** to **GitHub Actions**.
 4. Run **Update data and deploy Pages** once manually.
+
+Reusable connectors: [U.S. Census module](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/us-census) · [proposed Yale module](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/review/yale-tariff-tracker-module/sources/yale-tariff-rate-tracker)
+
+## Review and release
+
+Code and methodology changes are prepared on `review/*` branches and submitted as Pull Requests. `main` remains the approved version. See [docs/REVIEW_AND_RELEASE.md](docs/REVIEW_AND_RELEASE.md) for preview, approval and rollback instructions.
 
 The weekly schedule probes the Census API for newly published months. A monthly schedule also refreshes the large Yale release asset. Both source cutoffs are stored separately so the dashboard never silently presents mismatched vintages.
 

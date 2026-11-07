@@ -13,6 +13,8 @@ on:
   push:
     branches: [main]
     paths-ignore: ["README.md", "README.pt-BR.md", "docs/**"]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
@@ -20,7 +22,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -45,6 +47,7 @@ jobs:
           restore-keys: source-data-${{ runner.os }}-
 
       - name: Update Census HTS10 data
+        if: github.event_name != 'pull_request'
         env:
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
         run: |
@@ -55,14 +58,14 @@ jobs:
           fi
 
       - name: Refresh Yale product-country panel
-        if: github.event.schedule == '37 10 15 * *' || github.event_name == 'workflow_dispatch' && inputs.refresh_yale
+        if: github.event_name != 'pull_request' && (github.event.schedule == '37 10 15 * *' || github.event_name == 'workflow_dispatch' && inputs.refresh_yale)
         run: |
           python scripts/fetch_yale.py
           python scripts/extract_yale_brazil.py
 
       - name: Build and validate dashboard
         run: |
-          if [ "$GITHUB_EVENT_NAME" != "push" ]; then
+          if [ "$GITHUB_EVENT_NAME" != "push" ] && [ "$GITHUB_EVENT_NAME" != "pull_request" ]; then
             IMPORTS="data/raw/census_brazil_hts10.csv.gz"
             if [ ! -f "$IMPORTS" ]; then IMPORTS="data/source/census_brazil_hts10_2025-01_to_2026-09.csv.gz"; fi
             python scripts/build_dashboard.py --imports "$IMPORTS"
@@ -71,7 +74,7 @@ jobs:
           python -m pytest -q
 
       - name: Commit refreshed public artifacts
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && github.event_name != 'pull_request'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

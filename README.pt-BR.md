@@ -4,6 +4,10 @@
 
 Monitor mensal das importações dos Estados Unidos provenientes do Brasil, com decomposição dos produtos que explicam cada alta ou queda e uma faixa cronológica das medidas tarifárias modeladas pelo **Tariff Rate Tracker**, do The Budget Lab at Yale.
 
+Este repositório é uma **showcase**: a aplicação e os dados processados ficam aqui, enquanto os conectores reutilizáveis e exemplos de acesso às fontes pertencem ao [Official Data API Toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit).
+
+**[Abrir o preview público do dashboard →](https://us-brazil-tariff-monitor.feliperamondbr.chatgpt.site)**
+
 ## O que o projeto entrega
 
 - série mensal de importações para consumo no nível HTS10, a partir de janeiro de 2025;
@@ -21,10 +25,18 @@ Monitor mensal das importações dos Estados Unidos provenientes do Brasil, com 
    Endpoint: `https://api.census.gov/data/timeseries/intltrade/imports/hs`  
    Filtros: `CTY_CODE=3510`, `COMM_LVL=HS10`, `SUMMARY_LVL=DET`, `SUMMARY_LVL2=HSCY`.  
    Medidas mensais: `CON_VAL_MO`, `GEN_VAL_MO`, `DUT_VAL_MO`, `CAL_DUT_MO` e quantidades.
+   Código reutilizável: [módulo U.S. Census do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/us-census).
 
 2. **The Budget Lab at Yale — Tariff Rate Tracker**  
    Repositório: <https://github.com/Budget-Lab-Yale/tariff-rate-tracker>  
    O workflow registra tag, data e URL exatas da release. Taxas são estatutárias modeladas, não direitos efetivamente recolhidos.
+   Código reutilizável proposto: [módulo Yale do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/review/yale-tariff-tracker-module/sources/yale-tariff-rate-tracker).
+
+## Revisão antes da publicação
+
+Mudanças de código e metodologia são preparadas em branches `review/*` e apresentadas em Pull Request. A branch `main` permanece como versão aprovada. O preview público pode ser atualizado com a branch de revisão sem tornar o repositório público nem fazer merge.
+
+O procedimento completo de aprovação, publicação e rollback está em [docs/REVIEW_AND_RELEASE.md](docs/REVIEW_AND_RELEASE.md).
 
 ## Publicar no seu GitHub
 
