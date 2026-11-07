@@ -1,0 +1,1172 @@
+{
+  "2025-03|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M1"
+  },
+  "2025-03|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710190635",
+    "milestone_id": "M1"
+  },
+  "2025-03|2009": {
+    "product_pt": "Sucos de frutas, sobretudo laranja",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2009110060",
+    "milestone_id": "M1"
+  },
+  "2025-03|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M1"
+  },
+  "2025-03|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308000",
+    "milestone_id": "M1"
+  },
+  "2025-03|9802": {
+    "product_pt": "Reparos e processamento no exterior",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "9802005060",
+    "milestone_id": "M1"
+  },
+  "2025-03|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M1"
+  },
+  "2025-03|2713": {
+    "product_pt": "Coque de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2713110000",
+    "milestone_id": "M1"
+  },
+  "2025-03|0901": {
+    "product_pt": "Café",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0901110025",
+    "milestone_id": "M1"
+  },
+  "2025-03|7601": {
+    "product_pt": "Alumínio bruto",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.25,
+    "tariff_regime": "232 aço/alumínio: 25%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7601106090",
+    "milestone_id": "M1"
+  },
+  "2025-04|0901": {
+    "product_pt": "Café",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0901110025",
+    "milestone_id": "M1"
+  },
+  "2025-04|1502": {
+    "product_pt": "Sebo e gorduras bovinas",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "1502100040",
+    "milestone_id": "M1"
+  },
+  "2025-04|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308000",
+    "milestone_id": "M1"
+  },
+  "2025-04|2713": {
+    "product_pt": "Coque de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2713110000",
+    "milestone_id": "M1"
+  },
+  "2025-04|8481": {
+    "product_pt": "Válvulas",
+    "tariff_exposure": 0.1870662428882825,
+    "tariff_rate": 0.0009406975561315175,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "8481809050",
+    "milestone_id": "M1"
+  },
+  "2025-04|7115": {
+    "product_pt": "Artigos de metais preciosos",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7115900530",
+    "milestone_id": "M1"
+  },
+  "2025-04|2009": {
+    "product_pt": "Sucos de frutas, sobretudo laranja",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2009110060",
+    "milestone_id": "M1"
+  },
+  "2025-04|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M1"
+  },
+  "2025-04|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M1"
+  },
+  "2025-04|8504": {
+    "product_pt": "Transformadores e conversores",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "8504230080",
+    "milestone_id": "M1"
+  },
+  "2025-05|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M2"
+  },
+  "2025-05|9801": {
+    "product_pt": "Bens dos EUA retornados sem alteração",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "9801001035",
+    "milestone_id": "M2"
+  },
+  "2025-05|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M2"
+  },
+  "2025-05|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308000",
+    "milestone_id": "M2"
+  },
+  "2025-05|0901": {
+    "product_pt": "Café",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0901110025",
+    "milestone_id": "M2"
+  },
+  "2025-05|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710190635",
+    "milestone_id": "M2"
+  },
+  "2025-05|1701": {
+    "product_pt": "Açúcar",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "1701991015",
+    "milestone_id": "M2"
+  },
+  "2025-05|1502": {
+    "product_pt": "Sebo e gorduras bovinas",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "1502100040",
+    "milestone_id": "M2"
+  },
+  "2025-05|4421": {
+    "product_pt": "Pickets, Palings, Posts And Rails, Sawn, Of Wood",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "4421997040",
+    "milestone_id": "M2"
+  },
+  "2025-05|2401": {
+    "product_pt": "Tabaco em folhas",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2401208510",
+    "milestone_id": "M2"
+  },
+  "2025-06|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M2"
+  },
+  "2025-06|7224": {
+    "product_pt": "Semielaborados de aços ligados",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "7224900055",
+    "milestone_id": "M2"
+  },
+  "2025-06|2401": {
+    "product_pt": "Tabaco em folhas",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2401208510",
+    "milestone_id": "M2"
+  },
+  "2025-06|7108": {
+    "product_pt": "Ouro",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7108121013",
+    "milestone_id": "M2"
+  },
+  "2025-06|2601": {
+    "product_pt": "Minério de ferro",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2601120030",
+    "milestone_id": "M2"
+  },
+  "2025-06|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308000",
+    "milestone_id": "M2"
+  },
+  "2025-06|0901": {
+    "product_pt": "Café",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0901110025",
+    "milestone_id": "M2"
+  },
+  "2025-06|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M2"
+  },
+  "2025-06|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710190635",
+    "milestone_id": "M2"
+  },
+  "2025-06|7304": {
+    "product_pt": "Tubos de aço sem costura",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7304294160",
+    "milestone_id": "M2"
+  },
+  "2025-07|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710190635",
+    "milestone_id": "M2"
+  },
+  "2025-07|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M2"
+  },
+  "2025-07|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M2"
+  },
+  "2025-07|1502": {
+    "product_pt": "Sebo e gorduras bovinas",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "1502100040",
+    "milestone_id": "M2"
+  },
+  "2025-07|1701": {
+    "product_pt": "Açúcar",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "1701145000",
+    "milestone_id": "M2"
+  },
+  "2025-07|7224": {
+    "product_pt": "Semielaborados de aços ligados",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7224900055",
+    "milestone_id": "M2"
+  },
+  "2025-07|9801": {
+    "product_pt": "Bens dos EUA retornados sem alteração",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "9801001035",
+    "milestone_id": "M2"
+  },
+  "2025-07|2601": {
+    "product_pt": "Minério de ferro",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2601120030",
+    "milestone_id": "M2"
+  },
+  "2025-07|2401": {
+    "product_pt": "Tabaco em folhas",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2401208510",
+    "milestone_id": "M2"
+  },
+  "2025-07|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Sem nova sobretaxa no recorte",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308000",
+    "milestone_id": "M2"
+  },
+  "2025-08|7224": {
+    "product_pt": "Semielaborados de aços ligados",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "7224900055",
+    "milestone_id": "M3"
+  },
+  "2025-08|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M3"
+  },
+  "2025-08|7208": {
+    "product_pt": "Laminados planos a quente",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "7208510060",
+    "milestone_id": "M3"
+  },
+  "2025-08|8481": {
+    "product_pt": "Válvulas",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.4509239214381031,
+    "tariff_regime": "IEEPA 50%: 40% Brasil + 10% recíproca",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "8481809050",
+    "milestone_id": "M3"
+  },
+  "2025-08|8411": {
+    "product_pt": "Turbinas e motores aeronáuticos",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.10000000000000002,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "8411124000",
+    "milestone_id": "M3"
+  },
+  "2025-08|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M3"
+  },
+  "2025-08|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710190635",
+    "milestone_id": "M3"
+  },
+  "2025-08|1502": {
+    "product_pt": "Sebo e gorduras bovinas",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "IEEPA 50%: 40% Brasil + 10% recíproca",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "1502100040",
+    "milestone_id": "M3"
+  },
+  "2025-08|1701": {
+    "product_pt": "Açúcar",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "IEEPA 50%: 40% Brasil + 10% recíproca",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "1701145000",
+    "milestone_id": "M3"
+  },
+  "2025-08|7207": {
+    "product_pt": "Semiacabados de ferro ou aço",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7207120050",
+    "milestone_id": "M3"
+  },
+  "2025-09|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M3"
+  },
+  "2025-09|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710121550",
+    "milestone_id": "M3"
+  },
+  "2025-09|9801": {
+    "product_pt": "Bens dos EUA retornados sem alteração",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.39999999999999997,
+    "tariff_regime": "IEEPA 40%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "9801001035",
+    "milestone_id": "M3"
+  },
+  "2025-09|1502": {
+    "product_pt": "Sebo e gorduras bovinas",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "IEEPA 50%: 40% Brasil + 10% recíproca",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "1502100040",
+    "milestone_id": "M3"
+  },
+  "2025-09|2009": {
+    "product_pt": "Sucos de frutas, sobretudo laranja",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1392585085880786,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "2009122500",
+    "milestone_id": "M3"
+  },
+  "2025-09|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M3"
+  },
+  "2025-09|4703": {
+    "product_pt": "Celulose química",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "4703290040",
+    "milestone_id": "M3"
+  },
+  "2025-09|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "IEEPA 50%: 40% Brasil + 10% recíproca",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "0202308000",
+    "milestone_id": "M3"
+  },
+  "2025-09|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M3"
+  },
+  "2025-09|0901": {
+    "product_pt": "Café",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "IEEPA 50%: 40% Brasil + 10% recíproca",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "0901110025",
+    "milestone_id": "M3"
+  },
+  "2025-11|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.10000000000000002,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M4"
+  },
+  "2025-11|4703": {
+    "product_pt": "Celulose química",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "4703290040",
+    "milestone_id": "M4"
+  },
+  "2025-11|9701": {
+    "product_pt": "Pinturas e desenhos",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.4000000000000001,
+    "tariff_regime": "IEEPA 40%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "9701910000",
+    "milestone_id": "M4"
+  },
+  "2025-11|0901": {
+    "product_pt": "Café",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0901110025",
+    "milestone_id": "M4"
+  },
+  "2025-11|2601": {
+    "product_pt": "Minério de ferro",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.09999999999999999,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "2601120030",
+    "milestone_id": "M4"
+  },
+  "2025-11|9802": {
+    "product_pt": "Reparos e processamento no exterior",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "9802005060",
+    "milestone_id": "M4"
+  },
+  "2025-11|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M4"
+  },
+  "2025-11|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M4"
+  },
+  "2025-11|8504": {
+    "product_pt": "Transformadores e conversores",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.09962758437445904,
+    "tariff_regime": "232 derivado: até 50% sobre conteúdo steel",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "8504230080",
+    "milestone_id": "M4"
+  },
+  "2025-11|1701": {
+    "product_pt": "Açúcar",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "IEEPA 50%: 40% Brasil + 10% recíproca",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "1701995015",
+    "milestone_id": "M4"
+  },
+  "2025-12|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710190635",
+    "milestone_id": "M4"
+  },
+  "2025-12|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M4"
+  },
+  "2025-12|9802": {
+    "product_pt": "Reparos e processamento no exterior",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "9802005060",
+    "milestone_id": "M4"
+  },
+  "2025-12|2713": {
+    "product_pt": "Coque de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2713110000",
+    "milestone_id": "M4"
+  },
+  "2025-12|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M4"
+  },
+  "2025-12|9701": {
+    "product_pt": "Pinturas e desenhos",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.39999999999999997,
+    "tariff_regime": "IEEPA 40%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "9701910000",
+    "milestone_id": "M4"
+  },
+  "2025-12|9703": {
+    "product_pt": "Esculturas",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.4000000000000001,
+    "tariff_regime": "IEEPA 40%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "9703900000",
+    "milestone_id": "M4"
+  },
+  "2025-12|7207": {
+    "product_pt": "Semiacabados de ferro ou aço",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7207120050",
+    "milestone_id": "M4"
+  },
+  "2025-12|8411": {
+    "product_pt": "Turbinas e motores aeronáuticos",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.09999999999999999,
+    "tariff_regime": "IEEPA 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "8411124000",
+    "milestone_id": "M4"
+  },
+  "2025-12|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "IEEPA isenta",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709001000",
+    "milestone_id": "M4"
+  },
+  "2026-02|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M5"
+  },
+  "2026-02|2601": {
+    "product_pt": "Minério de ferro",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "2601120030",
+    "milestone_id": "M5"
+  },
+  "2026-02|7224": {
+    "product_pt": "Semielaborados de aços ligados",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.5,
+    "tariff_regime": "232 aço/alumínio: 50%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "7224900055",
+    "milestone_id": "M5"
+  },
+  "2026-02|9802": {
+    "product_pt": "Reparos e processamento no exterior",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "9802005060",
+    "milestone_id": "M5"
+  },
+  "2026-02|2207": {
+    "product_pt": "Álcool etílico",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.10000000000000002,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "2207106090",
+    "milestone_id": "M5"
+  },
+  "2026-02|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308025",
+    "milestone_id": "M5"
+  },
+  "2026-02|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M5"
+  },
+  "2026-02|9801": {
+    "product_pt": "Bens dos EUA retornados sem alteração",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.10000000000000002,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "9801001035",
+    "milestone_id": "M5"
+  },
+  "2026-02|2711": {
+    "product_pt": "Gases de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2711120010",
+    "milestone_id": "M5"
+  },
+  "2026-02|6802": {
+    "product_pt": "Pedras trabalhadas",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.10000000000000002,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "6802990050",
+    "milestone_id": "M5"
+  },
+  "2026-03|9801": {
+    "product_pt": "Bens dos EUA retornados sem alteração",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.10000000000000002,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "9801001075",
+    "milestone_id": "M5"
+  },
+  "2026-03|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710190635",
+    "milestone_id": "M5"
+  },
+  "2026-03|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308025",
+    "milestone_id": "M5"
+  },
+  "2026-03|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (gn6_civil_aircraft)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M5"
+  },
+  "2026-03|7202": {
+    "product_pt": "Ferroligas e ferroníquel",
+    "tariff_exposure": 0.03767069730601417,
+    "tariff_rate": 0.003767069730601417,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7202938000",
+    "milestone_id": "M5"
+  },
+  "2026-03|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M5"
+  },
+  "2026-03|2601": {
+    "product_pt": "Minério de ferro",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "2601120030",
+    "milestone_id": "M5"
+  },
+  "2026-03|0901": {
+    "product_pt": "Café",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0901110025",
+    "milestone_id": "M5"
+  },
+  "2026-03|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "Seção 122 isenta (none)",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M5"
+  },
+  "2026-03|2207": {
+    "product_pt": "Álcool etílico",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.1,
+    "tariff_regime": "Seção 122: 10%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "2207106090",
+    "milestone_id": "M5"
+  },
+  "2026-07|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709001000",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|2713": {
+    "product_pt": "Coque de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2713110000",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|1502": {
+    "product_pt": "Sebo e gorduras bovinas",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.375,
+    "tariff_regime": "301-Brasil 25.0% + 301-trabalho forçado 12.50% = 37.5%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "1502100040",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|8429": {
+    "product_pt": "Máquinas de terraplenagem",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.25,
+    "tariff_regime": "232 metais anexo 1B: 25%; excluído das 301 sobrepostas",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "8429511015",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.037500000000000006,
+    "tariff_regime": "301-Brasil 2.5% + 301-trabalho forçado 1.25% = 3.8%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "8802300140",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|0202": {
+    "product_pt": "Carne bovina congelada",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "0202308025",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|9801": {
+    "product_pt": "Bens dos EUA retornados sem alteração",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.375,
+    "tariff_regime": "301-Brasil 25.0% + 301-trabalho forçado 12.50% = 37.5%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "9801001035",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|2818": {
+    "product_pt": "Óxido de alumínio e coríndon",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2818200000",
+    "milestone_id": "M7+M8"
+  },
+  "2026-07|8807": {
+    "product_pt": "Partes de aeronaves",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.037500000000000006,
+    "tariff_regime": "301-Brasil 2.5% + 301-trabalho forçado 1.25% = 3.8%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "8807300030",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|2709": {
+    "product_pt": "Petróleo bruto",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2709002090",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|8802": {
+    "product_pt": "Aeronaves",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.037500000000000006,
+    "tariff_regime": "301-Brasil 2.5% + 301-trabalho forçado 1.25% = 3.8%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "8802400140",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|2009": {
+    "product_pt": "Sucos de frutas, sobretudo laranja",
+    "tariff_exposure": 0.029978588298041297,
+    "tariff_rate": 0.011241970611765488,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2009122590",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|9802": {
+    "product_pt": "Reparos e processamento no exterior",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.037500000000000006,
+    "tariff_regime": "301-Brasil 2.5% + 301-trabalho forçado 1.25% = 3.8%",
+    "editorial_reading": "Cresceu apesar da exposição; investigar preço, composição e antecipação.",
+    "leader_hts10": "9802005060",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|2710": {
+    "product_pt": "Derivados de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2710121550",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|7201": {
+    "product_pt": "Ferro-gusa",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "7201100000",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|8429": {
+    "product_pt": "Máquinas de terraplenagem",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.25,
+    "tariff_regime": "232 metais anexo 1B: 25%; excluído das 301 sobrepostas",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "8429511015",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|2713": {
+    "product_pt": "Coque de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2713110000",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|2711": {
+    "product_pt": "Gases de petróleo",
+    "tariff_exposure": 0,
+    "tariff_rate": 0,
+    "tariff_regime": "301-Brasil isenta + 301-trabalho forçado isenta = 0.0%",
+    "editorial_reading": "Movimento predominantemente isento/fora do marco; não atribuir à tarifa.",
+    "leader_hts10": "2711290060",
+    "milestone_id": "M7+M8"
+  },
+  "2026-08|1701": {
+    "product_pt": "Açúcar",
+    "tariff_exposure": 1,
+    "tariff_rate": 0.375,
+    "tariff_regime": "301-Brasil 25.0% + 301-trabalho forçado 12.50% = 37.5%",
+    "editorial_reading": "Compatível com queda pós-tarifa; validar quantidade e sazonalidade.",
+    "leader_hts10": "1701995015",
+    "milestone_id": "M7+M8"
+  }
+}

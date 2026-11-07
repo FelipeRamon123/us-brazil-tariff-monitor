@@ -1,0 +1,9 @@
+{
+  "source_rows": 54593,
+  "periods": 21,
+  "unique_hts10": 7389,
+  "duplicate_period_hts10": 0,
+  "missing_description": 0,
+  "total_imports_usd": 67518742116,
+  "warning": "Statutory Yale rates and observed Census duties are distinct measures; movements are descriptive, not causal estimates."
+}
