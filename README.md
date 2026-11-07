@@ -1,4 +1,4 @@
-# U.S.–Brazil imports under changing tariffs
+# U.S. tariffs across Brazil's export basket
 
 [Português](README.pt-BR.md)
 
@@ -11,10 +11,10 @@ This repository is a **showcase**. The user-facing application and processed dat
 ## Highlights
 
 - Monthly consumption imports since January 2025 at HTS10 detail.
-- Interactive timeline for Section 232, 301, 201 and 122 and IEEPA measures.
+- Main interactive chart with relative-composition and absolute-value modes, selectable tariff bands, optional policy markers and monthly value labels.
 - Click any month to inspect the HS4 products driving the month-on-month change.
 - 100% stacked tariff-exposure view with seven rate bands, trade-weighted average rate and month-to-month band migration.
-- Source cutoff, Yale release, row counts, duplicates and checksum exposed in the UI.
+- Source cutoffs, release metadata, row counts, duplicates and checksums retained in internal data and tests rather than displayed in the portfolio interface.
 - Scheduled GitHub Actions refresh and GitHub Pages deployment.
 
 ## Setup

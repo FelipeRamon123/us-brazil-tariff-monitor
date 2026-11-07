@@ -1,4 +1,4 @@
-# Brasil × tarifas dos EUA
+# Tarifas dos EUA na pauta exportadora brasileira
 
 [English](README.md) · Dashboard GitHub Pages pronto para publicação
 
@@ -11,12 +11,12 @@ Este repositório é uma **showcase**: a aplicação e os dados processados fica
 ## O que o projeto entrega
 
 - série mensal de importações para consumo no nível HTS10, a partir de janeiro de 2025;
-- gráfico interativo com todos os marcos relevantes das Seções 232, 301, 201 e 122 e da IEEPA;
+- gráfico interativo principal com modos de composição relativa e valor absoluto, seleção de faixas e exibição opcional dos marcos tarifários e valores mensais;
 - clique no mês para ver as maiores altas e quedas por HTS4;
 - área empilhada em 100% da pauta por sete faixas de tarifa adicional, com média ponderada, cobertura do cruzamento e migração mensal entre faixas;
 - valor antes/depois, variação absoluta, percentual e contribuição para o movimento do mês;
 - taxa estatutária adicional média e parcela exposta quando o painel HTS10 do Yale está disponível;
-- visão explícita de auditoria: competência, linhas, duplicidades, hash e versão das fontes;
+- controles internos de qualidade, hashes e versões das fontes preservados nos arquivos de dados e nos testes, sem exposição na interface de portfólio;
 - atualização automática e publicação no GitHub Pages.
 
 ## Fontes
