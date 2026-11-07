@@ -54,15 +54,11 @@ jobs:
             echo "CENSUS_API_KEY is not configured; using the tracked audited snapshot."
           fi
 
-      - name: Set up R for the Yale extractor
-        if: github.event.schedule == '37 10 15 * *' || github.event_name == 'workflow_dispatch' && inputs.refresh_yale
-        uses: r-lib/actions/setup-r@v2
-
       - name: Refresh Yale product-country panel
         if: github.event.schedule == '37 10 15 * *' || github.event_name == 'workflow_dispatch' && inputs.refresh_yale
         run: |
           python scripts/fetch_yale.py
-          Rscript scripts/extract_yale_brazil.R
+          python scripts/extract_yale_brazil.py
 
       - name: Build and validate dashboard
         run: |

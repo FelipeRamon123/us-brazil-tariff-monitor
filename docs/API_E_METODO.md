@@ -22,7 +22,7 @@ requests.get("https://api.census.gov/data/timeseries/intltrade/imports/hs", para
 
 ## 2. Painel do Yale
 
-O workflow consulta a API de releases do GitHub, baixa o ZIP mais recente e filtra apenas `country=3510`. O extrator prefere `snapshot_*.rds`, pois permite processar uma revisão por vez e reduzir memória. Se a release contiver somente `rate_timeseries.rds`, usa o painel intervalar completo.
+O workflow consulta a API de releases do GitHub, baixa o ZIP mais recente e lê somente os arquivos `actual/snapshots/valid_from=*/rates.parquet`. O filtro `country=3510` é aplicado pelo mecanismo Parquet antes da conversão para pandas, reduzindo memória e descartando os cenários contrafactuais incluídos no mesmo pacote.
 
 Campos esperados:
 

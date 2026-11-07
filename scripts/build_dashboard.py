@@ -78,9 +78,9 @@ def enrich_with_yale(df: pd.DataFrame, path: Path | None) -> pd.DataFrame:
         if active.empty:
             continue
         active["days"] = ((active.valid_until.clip(upper=end) - active.valid_from.clip(lower=start)).dt.days + 1).clip(lower=0)
-        monthly = active.groupby("hts10").apply(
-            lambda x: (x.total_additional * x.days).sum() / x.days.sum(), include_groups=False
-        ).rename("yale_rate_month")
+        active["rate_days"] = active.total_additional * active.days
+        monthly_sums = active.groupby("hts10", as_index=True).agg(rate_days=("rate_days", "sum"), days=("days", "sum"))
+        monthly = monthly_sums.rate_days.div(monthly_sums.days).rename("yale_rate_month")
         eom = active[(active.valid_from <= end) & (active.valid_until >= end)].drop_duplicates("hts10", keep="last").set_index("hts10")["total_additional"].rename("yale_rate_eom")
         joined = monthly.to_frame().join(eom, how="left").reset_index()
         joined["period"] = period
