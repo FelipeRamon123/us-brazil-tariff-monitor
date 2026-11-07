@@ -55,6 +55,13 @@
             <label><input id="toggleValueLabels" type="checkbox" checked> Valores mensais</label>
           </div>
         </div>
+        <div class="measure-controls" aria-label="Selecionar medidas tarifárias exibidas no gráfico">
+          <div class="measure-controls-head">
+            <div><strong>Medidas no gráfico</strong><span>Ative ou oculte cada linha vertical.</span></div>
+            <div class="measure-actions"><button id="showAllMeasures" type="button">Todas</button><button id="hideAllMeasures" type="button">Nenhuma</button></div>
+          </div>
+          <div id="measureLegend" class="measure-legend"></div>
+        </div>
         <div class="exposure-chart-wrap">
           <div id="exposureChart" class="exposure-chart" role="img" aria-label="Participação mensal do valor importado por faixa de tarifa adicional"></div>
           <div id="exposureTooltip" class="chart-tooltip" hidden></div>
@@ -103,13 +110,16 @@
       </div>
     </section>
 
-    <section id="metodo" class="method-section">
-      <div class="method-lead"><p class="section-index">04 / COMO LER</p><h2>Duas medidas diferentes,<br>no mesmo quadro.</h2></div>
-      <div class="method-grid">
-        <article><span>OBSERVADO</span><h3>Census</h3><p>Valor importado, valor dutiável e direitos calculados são registros mensais para consumo, agregados a partir do HTS10.</p></article>
-        <article><span>MODELADO</span><h3>Yale</h3><p>Taxas adicionais estatutárias são regras modeladas por produto, origem e data. Não equivalem aos direitos efetivamente calculados.</p></article>
-        <article><span>INTERPRETAÇÃO</span><h3>Sem causalidade automática</h3><p>Antecipação ou queda pós-tarifa é uma hipótese compatível com a série, não uma prova causal. Petróleo, aeronaves e outros itens podem dominar o mês.</p></article>
-      </div>
+    <section id="metodo" class="method-section glossary-section">
+      <div class="method-lead"><p class="section-index">04 / DEFINIÇÕES</p><h2>Conceitos usados<br>no painel.</h2><p>As estatísticas aduaneiras observadas e as tarifas estatutárias modeladas medem coisas distintas.</p></div>
+      <dl class="glossary-grid">
+        <div><dt>Importações para consumo</dt><dd>Valor das mercadorias brasileiras que entraram nos EUA para consumo ou uso. O painel usa <code>CON_VAL_MO</code>, na perspectiva do importador americano.</dd></div>
+        <div><dt>Dutiable value</dt><dd>Parcela do valor importado classificada pelo Census como sujeita a direitos aduaneiros (<code>DUT_VAL_MO</code>). Não é sinônimo do valor alcançado por todas as medidas modeladas pelo Yale.</dd></div>
+        <div><dt>Direitos calculados</dt><dd>Direitos associados às entradas do mês no Census (<code>CAL_DUT_MO</code>). Não devem ser interpretados como a alíquota estatutária de uma linha HTS10.</dd></div>
+        <div><dt>Tarifa adicional modelada</dt><dd>Alíquota adicional do Yale Tariff Rate Tracker por HTS10, origem e data. No mês, a taxa é ponderada pelos dias de vigência.</dd></div>
+        <div><dt>Potencialmente tarifado</dt><dd>Participação do valor importado associada a uma tarifa adicional modelada maior que zero. Indica exposição estatutária, não o direito efetivamente recolhido.</dd></div>
+        <div><dt>Tarifa adicional média</dt><dd>Média das tarifas adicionais ponderada pelo valor importado de cada HTS10. A faixa superior <strong>&gt;40%</strong> é predominantemente composta por taxas de 50%; casos excepcionais mais altos ficam consolidados nela.</dd></div>
+      </dl>
     </section>
 
   </main>

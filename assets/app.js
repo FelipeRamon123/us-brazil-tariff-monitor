@@ -1,9 +1,9 @@
 const state={
   data:null,period:null,direction:"up",authority:"Todos",driver:null,
-  exposureMode:"share",visibleBands:new Set(),showPolicyMarkers:true,showValueLabels:true,
+  exposureMode:"share",visibleBands:new Set(),visibleMeasures:new Set(),showPolicyMarkers:true,showValueLabels:true,
 };
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
-const bandColors={free:"#d8d4c8",low:"#aebaa5",medium:"#6e9280",standard:"#2f6859",high:"#a66a4d",very_high:"#7b2f19",extreme:"#421b16",unmatched:"#ece6da"};
+const bandColors={free:"#d8d4c8",low:"#aebaa5",medium:"#6e9280",standard:"#2f6859",high:"#a66a4d",very_high:"#7b2f19",unmatched:"#ece6da"};
 const money=v=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:1}).format(v||0);
 const pct=v=>v==null?"—":new Intl.NumberFormat("pt-BR",{style:"percent",maximumFractionDigits:1,signDisplay:"exceptZero"}).format(v);
 const monthLabel=p=>new Intl.DateTimeFormat("pt-BR",{month:"short",year:"numeric"}).format(new Date(`${p}-15T12:00:00`)).replace(". de ","/");
@@ -16,7 +16,8 @@ async function init(){
   if(!response.ok)throw new Error(`Falha ao carregar dados: ${response.status}`);
   state.data=await response.json();state.period=state.data.meta.latest_period;
   state.visibleBands=new Set(bandDefinitions().map(d=>d.key));
-  renderSeriesPeriod();renderAuthorities();renderExposure();renderPolicyRail();renderSelected();bind();
+  state.visibleMeasures=new Set(state.data.milestones.map((_,i)=>i));
+  renderSeriesPeriod();renderAuthorities();renderMeasureLegend();renderExposure();renderPolicyRail();renderSelected();bind();
   requestAnimationFrame(validateVisualMarks);
 }
 
@@ -72,6 +73,17 @@ function renderExposureLegend(){
   });
 }
 
+function renderMeasureLegend(){
+  const legend=$("#measureLegend");if(!legend)return;
+  legend.innerHTML=state.data.milestones.map((event,index)=>`<button type="button" class="measure-chip ${state.visibleMeasures.has(index)?"active":""}" data-measure="${index}" aria-pressed="${state.visibleMeasures.has(index)}"><time>${event.date.slice(0,7)}</time><span>${esc(event.short)}</span><b>${esc(event.rate)}</b></button>`).join("");
+  $$(".measure-chip").forEach(button=>button.onclick=()=>{
+    const index=+button.dataset.measure;
+    state.visibleMeasures.has(index)?state.visibleMeasures.delete(index):state.visibleMeasures.add(index);
+    renderMeasureLegend();renderExposureChart();
+  });
+  $(".measure-controls")?.classList.toggle("is-disabled",!state.showPolicyMarkers);
+}
+
 function renderExposureChart(){
   const rows=state.data.tariff_bands||[];if(!rows.length)return;
   const mode=state.exposureMode,W=1200,H=470,p={l:74,r:24,t:58,b:52};
@@ -97,8 +109,16 @@ function renderExposureChart(){
     svg+=`<path class="exposure-total-line" d="${smoothPath(totalPoints)}"><title>Valor total exportado</title></path>`;
   }
   if(state.showPolicyMarkers){
-    const months=[...new Set(state.data.milestones.map(e=>e.date.slice(0,7)))];
-    months.forEach(period=>{const i=rows.findIndex(r=>r.period===period);if(i>=0)svg+=`<line class="exposure-event-line" x1="${x(i)}" x2="${x(i)}" y1="${p.t}" y2="${H-p.b}"/><circle class="exposure-event-dot" cx="${x(i)}" cy="${p.t-9}" r="3"/>`;});
+    const visible=state.data.milestones.map((event,index)=>({event,index})).filter(item=>state.visibleMeasures.has(item.index));
+    const perMonth=Object.groupBy?Object.groupBy(visible,item=>item.event.date.slice(0,7)):visible.reduce((acc,item)=>{const period=item.event.date.slice(0,7);(acc[period]??=[]).push(item);return acc},{});
+    Object.entries(perMonth).forEach(([period,items])=>{
+      const i=rows.findIndex(r=>r.period===period);if(i<0)return;
+      items.forEach((item,position)=>{
+        const offset=(position-(items.length-1)/2)*8,eventX=x(i)+offset,event=item.event;
+        const title=`${dateLabel(event.date)} · ${event.short} · ${event.rate}`;
+        svg+=`<g class="exposure-event" data-measure="${item.index}"><title>${esc(title)}</title><line class="exposure-event-line" x1="${eventX}" x2="${eventX}" y1="${p.t}" y2="${H-p.b}"/><circle class="exposure-event-dot" cx="${eventX}" cy="${p.t-8-position%2*5}" r="3"/></g>`;
+      });
+    });
   }
   rows.forEach((r,i)=>{
     if(i%2===0||i===rows.length-1)svg+=`<text class="axis-label" x="${x(i)}" y="${H-18}" text-anchor="middle">${r.period.slice(5)}/${r.period.slice(2,4)}</text>`;
@@ -190,8 +210,10 @@ function validateVisualMarks(){
 function bind(){
   $$("[data-direction]").forEach(b=>b.onclick=()=>{state.direction=b.dataset.direction;state.driver=null;$$("[data-direction]").forEach(x=>x.classList.toggle("active",x===b));renderDrivers()});
   $$('[data-exposure-mode]').forEach(b=>b.onclick=()=>{state.exposureMode=b.dataset.exposureMode;$$('[data-exposure-mode]').forEach(x=>x.classList.toggle("active",x===b));renderExposureChart()});
-  $("#togglePolicyMarkers").onchange=e=>{state.showPolicyMarkers=e.target.checked;renderExposureChart()};
+  $("#togglePolicyMarkers").onchange=e=>{state.showPolicyMarkers=e.target.checked;renderMeasureLegend();renderExposureChart()};
   $("#toggleValueLabels").onchange=e=>{state.showValueLabels=e.target.checked;renderExposureChart()};
+  $("#showAllMeasures").onclick=()=>{state.visibleMeasures=new Set(state.data.milestones.map((_,i)=>i));state.showPolicyMarkers=true;$("#togglePolicyMarkers").checked=true;renderMeasureLegend();renderExposureChart()};
+  $("#hideAllMeasures").onclick=()=>{state.visibleMeasures.clear();renderMeasureLegend();renderExposureChart()};
   $("#downloadCsv").onclick=downloadCsv;
   $("#langToggle").onclick=()=>alert("A documentação completa em inglês está no README.md do repositório.");
   window.addEventListener("resize",renderExposureChart);

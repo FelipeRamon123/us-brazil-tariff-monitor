@@ -11,12 +11,11 @@ import pandas as pd
 
 TARIFF_BANDS = [
     ("free", "0%", -0.0000001, 0.0000001),
-    ("low", ">0–10%", 0.0000001, 0.1000001),
-    ("medium", ">10–15%", 0.1000001, 0.1500001),
-    ("standard", ">15–25%", 0.1500001, 0.2500001),
-    ("high", ">25–40%", 0.2500001, 0.4000001),
-    ("very_high", ">40–60%", 0.4000001, 0.6000001),
-    ("extreme", ">60%", 0.6000001, float("inf")),
+    ("low", ">0-10%", 0.0000001, 0.1000001),
+    ("medium", ">10-15%", 0.1000001, 0.1500001),
+    ("standard", ">15-25%", 0.1500001, 0.2500001),
+    ("high", ">25-40%", 0.2500001, 0.4000001),
+    ("very_high", ">40%", 0.4000001, float("inf")),
 ]
 
 
@@ -27,7 +26,7 @@ def tariff_band(rate) -> str | None:
     for key, _label, lower, upper in TARIFF_BANDS:
         if lower < value <= upper or key == "free" and value <= upper:
             return key
-    return "extreme"
+    return "very_high"
 
 
 def sha256(path: Path) -> str:
