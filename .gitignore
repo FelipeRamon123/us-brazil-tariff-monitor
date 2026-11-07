@@ -6,4 +6,6 @@ data/work/
 *.zip
 *.rds
 *.parquet
+dist/
+site-package.tar.gz
 

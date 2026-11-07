@@ -91,11 +91,14 @@ jobs:
           key: source-data-${{ runner.os }}-${{ github.run_id }}
 
       - uses: actions/configure-pages@v5
+        if: vars.ENABLE_GITHUB_PAGES == 'true'
       - uses: actions/upload-pages-artifact@v3
+        if: vars.ENABLE_GITHUB_PAGES == 'true'
         with:
           path: .
 
   deploy:
+    if: vars.ENABLE_GITHUB_PAGES == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
