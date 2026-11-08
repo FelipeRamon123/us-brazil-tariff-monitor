@@ -1,8 +1,8 @@
-# U.S. tariffs across Brazil's export basket
+# U.S. surcharges across Brazil's export basket
 
 [Português](README.pt-BR.md)
 
-A reproducible GitHub Pages dashboard combining monthly U.S. imports from Brazil with the statutory tariff timeline modeled by The Budget Lab at Yale.
+A GitHub Pages dashboard combining monthly U.S. imports from Brazil with a discrete legal-treatment layer derived from The Budget Lab at Yale's tariff timeline and the governing measures.
 
 This repository is a **showcase**. The user-facing application and processed data live here; reusable source connectors and access examples belong in the [Official Data API Toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit).
 
@@ -22,9 +22,9 @@ See [docs/DATASET.md](docs/DATASET.md) for the field dictionary.
 
 - Monthly consumption imports since January 2025 at HTS10 detail.
 - Fully bilingual Portuguese/English interface, including charts, controls, policy milestones, product analysis, dates and value formatting.
-- Main interactive chart with relative-composition and absolute-value modes, selectable tariff bands, optional policy markers and monthly value labels.
+- Main interactive chart with relative-composition and absolute-value modes, selectable potential-surcharge bands, optional policy markers and monthly value labels.
 - Click any month to inspect the HS4 products driving the month-on-month change.
-- 100% stacked tariff-exposure view with seven rate bands, trade-weighted average rate and month-to-month band migration.
+- 100% stacked surcharge view based on the discrete treatment in force on day 15; content-dependent measures use the highest potential statutory band and are labeled “up to” in product detail.
 - Source cutoffs, release metadata, row counts, duplicates and checksums retained in internal data and tests rather than displayed in the portfolio interface.
 - Scheduled GitHub Actions refresh and GitHub Pages deployment.
 
@@ -54,7 +54,9 @@ See [the API and methodology guide](docs/API_E_METODO.md) for endpoint parameter
 
 ## Important distinction
 
-Census calculated duties are observed monthly customs statistics. Yale rates are modeled statutory rates. They answer different questions and are intentionally displayed as separate measures.
+Census calculated duties are observed monthly customs statistics. Yale's source model is retained only in auxiliary audit fields. The primary layer removes probability-weighted applicability: identifiable civil aircraft are classified at 0% subject to General Note 6, other use-conditioned lines default to the full headline rate, and content-dependent measures use the highest potentially applicable statutory rate for band assignment with an “up to” qualifier.
+
+“Reference surcharge” excludes the ordinary base tariff, antidumping and countervailing duties, and measures outside the tracker’s scope. It is an analytical classification, not a binding customs determination.
 
 ## License and data terms
 

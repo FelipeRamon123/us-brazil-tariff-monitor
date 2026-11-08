@@ -31,17 +31,33 @@ Campos esperados:
 - `total_additional`, `total_rate`, `base_rate`;
 - colunas por autoridade, quando presentes.
 
-## 3. Regra temporal correta
+## 3. Regra temporal principal
 
-O Census é mensal e o Yale é diário/intervalar. Para cada `mês × HTS10`:
+O Census é mensal e o Yale é diário/intervalar. Para cada `mês × HTS10`, a classificação principal adota uma data de referência fixa:
 
-1. selecionam-se os intervalos do Yale que intersectam o mês;
-2. calcula-se o número de dias de interseção;
-3. `total_additional` é ponderada pelos dias de vigência;
-4. a taxa do último dia do mês é preservada em `yale_rate_eom`;
-5. a média do grupo HTS4 é ponderada pelo valor importado daquele mês.
+1. define-se o dia 15 como referência mensal;
+2. seleciona-se o intervalo Yale vigente nessa data para cada HTS10;
+3. os componentes desse intervalo passam por uma camada normativa discreta antes de formar `additional_rate_effective`;
+4. uma medida iniciada até o dia 15 entra no próprio mês; depois do dia 15, entra no mês seguinte;
+5. aeronaves civis diretamente identificáveis nos códigos 8801, 8802, 8805 e 8806 são classificadas em 0%, sob condição de cumprimento da General Note 6 e comprovação na entrada;
+6. nos demais códigos com exceção dependente de uso, adota-se por padrão a alíquota cheia da medida e registra-se a ressalva de possível isenção;
+7. estimativas do Yale baseadas em parcela de conteúdo não viram médias: a linha recebe a maior alíquota estatutária potencial e o qualificador `up_to`;
+8. `yale_modeled_rate_reference`, `yale_modeled_rate_day_weighted` e `yale_modeled_rate_eom` preservam o modelo de origem somente para auditoria.
 
-Assim, uma medida vigente desde 18 de agosto não é aplicada retroativamente aos primeiros 17 dias. Como a base mensal não informa o dia de desembaraço de cada entrada, a média por dias é uma medida de **exposição estatutária mensal**, não uma estimativa dos direitos efetivamente pagos.
+Nos níveis agregados SH2/SH4/SH6/HTS8, a tabela mostra como principal a faixa discreta com maior valor importado entre os HTSUS10 do código. Uma incidência de até 50% entra em `>40%`; na decomposição, aparece como “até 50%”, com a condição sobre o conteúdo abrangido.
+
+O termo **sobretarifa de referência** designa uma classificação analítica das medidas adicionais. Não abrange a tarifa-base normal, antidumping, direitos compensatórios ou outras incidências fora do tracker.
+
+Assim, uma medida iniciada em 18 de agosto entra na classificação principal de setembro. As hipóteses de utilização do Yale não participam da visualização principal e nenhuma classificação substitui a documentação aduaneira necessária para comprovar uma exceção.
+
+### Exceções condicionadas e aeronaves
+
+As ações da Seção 301 contra o Brasil preveem exceção para aeronaves civis, motores, peças, subconjuntos e simuladores que atendam à **General Note 6**. O HTS10, isoladamente, não comprova uso final nem elegibilidade. Por isso, o método adota duas regras explícitas:
+
+- aeronaves diretamente identificáveis e não militares: `conditional_exemption`, alíquota de referência 0%;
+- peças, insumos e demais produtos: incidência cheia por padrão; quando o conteúdo tributável não é observável, usa-se a alíquota potencial máxima (`conditional_scope` + `up_to`), sempre com a condição de aplicação explicitada.
+
+Fontes normativas: [Seção 301 Brasil, Federal Register 2026-14542](https://public-inspection.federalregister.gov/2026-14542.pdf), [Seção 301 trabalho forçado, Federal Register 2026-15274](https://public-inspection.federalregister.gov/2026-15274.pdf) e [HTSUS, General Note 6](https://hts.usitc.gov/). O CBP é a autoridade competente para decisões vinculantes de classificação e elegibilidade.
 
 ## 4. Decomposição do movimento
 

@@ -6,7 +6,7 @@
   "latest_period": "2026-09",
   "rows": 54593,
   "unique_htsus10": 7389,
-  "generated_at": "2026-11-08T17:29:40.236388+00:00",
+  "generated_at": "2026-11-09T00:41:48.462565+00:00",
   "census": {
     "endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
     "sha256": "ae358b79244b3bbd595083b38c902f806035d42b68608cea235f76f9ac76b2d4"
@@ -20,7 +20,8 @@
     "asset_size": 659288828,
     "release_url": "https://github.com/Budget-Lab-Yale/tariff-rate-tracker/releases/tag/v1.2"
   },
-  "rate_method": "total_additional weighted by calendar days in force within each month; end-of-month rate reported separately",
+  "primary_rate_method": "discrete potential-surcharge classification at HTSUS10 on calendar day 15; direct civil aircraft are classified at 0 subject to General Note 6, other use-conditioned lines default to the full headline rate, and content-dependent measures use the highest potentially applicable statutory rate with an up_to qualifier",
+  "yale_auxiliary_fields": "yale_modeled_rate_reference and Yale day-weighted/end-of-month fields preserve the source model for audit only; they do not determine dashboard bands",
   "value_basis": "U.S. imports for consumption (CON_VAL_MO)",
   "license_note": "Repository code is MIT licensed; source data remain subject to their original terms."
 }

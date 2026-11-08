@@ -32,6 +32,118 @@ TARIFF_COMPONENTS = {
 }
 
 DRIVER_LEVELS = (2, 4, 6, 8, 10)
+MONTHLY_REFERENCE_DAY = 15
+
+# The Yale tracker intentionally models partial applicability in some programs.
+# The public dashboard does not turn those assumptions into point tariff rates.
+STATUTORY_232_RATES = {0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 1.00}
+STATUTORY_122_RATES = {0.10}
+DIRECT_AIRCRAFT_PREFIXES = ("8801", "8802", "8805", "8806")
+
+
+def _is_one_of(value, allowed: set[float], tolerance: float = 1e-8) -> bool:
+    return any(abs(float(value) - item) <= tolerance for item in allowed)
+
+
+def apply_discrete_treatment(df: pd.DataFrame) -> pd.DataFrame:
+    """Replace modeled applicability shares with legal-treatment states.
+
+    Aircraft identifiable as non-military aircraft are classified at 0% under
+    the civil-aircraft exception, subject to General Note 6 and entry evidence.
+    Other use-conditioned lines default to the full headline rate, with an
+    explicit caveat. Content-share estimates remain unquantified and are shown
+    as conditional scope rather than as a modeled point tariff.
+    """
+    out = df.copy()
+    out["yale_rate_modeled"] = pd.to_numeric(out["yale_rate_effective"], errors="coerce")
+    for component in TARIFF_COMPONENTS:
+        out[f"yale_{component}"] = pd.to_numeric(out[f"yale_{component}"], errors="coerce").astype(float)
+        out[f"yale_modeled_{component}"] = pd.to_numeric(out[f"yale_{component}"], errors="coerce")
+
+    descriptions = out.get("hts10_description", pd.Series("", index=out.index)).fillna("").str.upper()
+    prefixes = out["hts10"].astype(str).str[:4]
+    military_only = descriptions.str.contains("MILITARY", regex=False) & ~descriptions.str.contains("NON-MILITARY", regex=False)
+    direct_aircraft = prefixes.isin(DIRECT_AIRCRAFT_PREFIXES) & ~military_only
+
+    status = pd.Series("classified", index=out.index, dtype="object")
+    note = pd.Series("", index=out.index, dtype="object")
+
+    br = pd.to_numeric(out["yale_rate_s301br"], errors="coerce").fillna(0)
+    fl = pd.to_numeric(out["yale_rate_s301fl"], errors="coerce").fillna(0)
+    use_conditioned = br.map(lambda value: _is_one_of(value, {0.025, 0.125})) | fl.map(
+        lambda value: _is_one_of(value, {0.0125, 0.0625})
+    )
+    aircraft_exception = use_conditioned & direct_aircraft
+    default_full = use_conditioned & ~direct_aircraft
+
+    out.loc[aircraft_exception, "yale_rate_s301br"] = 0.0
+    out.loc[aircraft_exception, "yale_rate_s301fl"] = 0.0
+    status.loc[aircraft_exception] = "conditional_exemption"
+    note.loc[aircraft_exception] = (
+        "Isenção adotada para aeronave civil; depende do enquadramento na General Note 6 "
+        "e da documentação da entrada."
+    )
+
+    out.loc[default_full & (br > 0), "yale_rate_s301br"] = 0.25
+    out.loc[default_full & (fl > 0), "yale_rate_s301fl"] = 0.125
+    status.loc[default_full] = "conditional_default_full"
+    note.loc[default_full] = (
+        "Alíquota cheia adotada por padrão; a entrada pode ser isenta se comprovar uso "
+        "aeronáutico ou farmacêutico elegível, conforme a medida aplicável."
+    )
+
+    rate232 = pd.to_numeric(out["yale_rate_232"], errors="coerce").fillna(0)
+    rate122 = pd.to_numeric(out["yale_rate_s122"], errors="coerce").fillna(0)
+    modeled_232_content = (rate232 > 0) & ~rate232.map(lambda value: _is_one_of(value, STATUTORY_232_RATES))
+    modeled_122_scope = (rate122 > 0) & ~rate122.map(lambda value: _is_one_of(value, STATUTORY_122_RATES))
+    modeled_content = modeled_232_content | modeled_122_scope
+    reference_dates = pd.to_datetime(out["yale_reference_date"], errors="coerce")
+    cap_232 = pd.Series(0.0, index=out.index)
+    cap_232.loc[modeled_232_content & (reference_dates < pd.Timestamp("2025-06-04"))] = 0.25
+    cap_232.loc[modeled_232_content & (reference_dates >= pd.Timestamp("2025-06-04"))] = 0.50
+    cap_122 = pd.Series(0.0, index=out.index)
+    cap_122.loc[modeled_122_scope] = 0.10
+    potential_cap = pd.concat([cap_232, cap_122], axis=1).max(axis=1)
+    out.loc[modeled_232_content, "yale_rate_232"] = cap_232.loc[modeled_232_content]
+    out.loc[modeled_122_scope, "yale_rate_s122"] = cap_122.loc[modeled_122_scope]
+    status.loc[modeled_content] = "conditional_scope"
+    note.loc[modeled_232_content] = (
+        "Sobretarifa potencial de até 50%; a incidência efetiva depende do conteúdo de aço, "
+        "alumínio ou outro metal abrangido declarado na entrada."
+    )
+    note.loc[modeled_232_content & (reference_dates < pd.Timestamp("2025-06-04"))] = (
+        "Sobretarifa potencial de até 25%; a incidência efetiva depende do conteúdo metálico "
+        "abrangido declarado na entrada."
+    )
+    note.loc[modeled_122_scope & ~modeled_232_content] = (
+        "Sobretarifa potencial de até 10%; a incidência depende do uso ou do escopo elegível "
+        "declarado na entrada."
+    )
+
+    out["yale_rate_effective"] = out["yale_rate_modeled"].copy()
+    out.loc[aircraft_exception, "yale_rate_effective"] = (
+        out.loc[aircraft_exception, "yale_rate_modeled"] - br.loc[aircraft_exception] - fl.loc[aircraft_exception]
+    ).clip(lower=0)
+    out.loc[default_full, "yale_rate_effective"] = (
+        out.loc[default_full, "yale_rate_modeled"] - br.loc[default_full] - fl.loc[default_full]
+        + out.loc[default_full, "yale_rate_s301br"] + out.loc[default_full, "yale_rate_s301fl"]
+    )
+    out.loc[modeled_content, "yale_rate_effective"] = pd.concat([
+        pd.to_numeric(out.loc[modeled_content, "yale_rate_effective"], errors="coerce"),
+        potential_cap.loc[modeled_content],
+    ], axis=1).max(axis=1)
+    out["yale_rate_effective"] = pd.to_numeric(out["yale_rate_effective"], errors="coerce").mask(
+        pd.to_numeric(out["yale_rate_effective"], errors="coerce").abs() < 1e-9, 0.0
+    )
+    out["tariff_rate_qualifier"] = "exact"
+    out.loc[modeled_content, "tariff_rate_qualifier"] = "up_to"
+    unmatched = out["yale_rate_modeled"].isna()
+    out.loc[unmatched, "yale_rate_effective"] = pd.NA
+    status.loc[unmatched] = "unmatched"
+    note.loc[unmatched] = ""
+    out["tariff_treatment_status"] = status
+    out["tariff_treatment_note"] = note
+    return out
 
 
 def applicable_components(candidates: list[dict], target_rate: float | None) -> list[dict]:
@@ -88,9 +200,15 @@ def normalize_imports(path: Path) -> pd.DataFrame:
 
 def enrich_with_yale(df: pd.DataFrame, path: Path | None) -> pd.DataFrame:
     df = df.copy()
-    df["yale_rate_month"] = pd.NA
+    df["yale_rate_effective"] = pd.NA
+    df["yale_rate_day_weighted"] = pd.NA
     df["yale_rate_eom"] = pd.NA
+    df["yale_reference_date"] = pd.NA
     df["yale_valid_from"] = pd.NA
+    df["yale_rate_modeled"] = pd.NA
+    df["tariff_treatment_status"] = "unmatched"
+    df["tariff_treatment_note"] = ""
+    df["tariff_rate_qualifier"] = "unmatched"
     for component in TARIFF_COMPONENTS:
         df[f"yale_{component}"] = pd.NA
         df[f"yale_{component}_since"] = pd.NA
@@ -117,34 +235,37 @@ def enrich_with_yale(df: pd.DataFrame, path: Path | None) -> pd.DataFrame:
     for period in sorted(df["period"].unique()):
         start = pd.Period(period).start_time.normalize()
         end = pd.Period(period).end_time.normalize()
+        reference = start + pd.Timedelta(days=MONTHLY_REFERENCE_DAY - 1)
         active = rates[(rates.valid_from <= end) & (rates.valid_until >= start)].copy()
         if active.empty:
             continue
         active["days"] = ((active.valid_until.clip(upper=end) - active.valid_from.clip(lower=start)).dt.days + 1).clip(lower=0)
         active["rate_days"] = active.total_additional * active.days
         monthly_sums = active.groupby("hts10", as_index=True).agg(rate_days=("rate_days", "sum"), days=("days", "sum"))
-        monthly = monthly_sums.rate_days.div(monthly_sums.days).rename("yale_rate_month")
-        eom_columns = ["hts10", "total_additional", "valid_from"]
-        eom_columns += list(TARIFF_COMPONENTS)
-        eom_columns += [f"{component}_since" for component in TARIFF_COMPONENTS]
-        eom = active[(active.valid_from <= end) & (active.valid_until >= end)].sort_values(["hts10", "valid_from"]).drop_duplicates("hts10", keep="last")[eom_columns].set_index("hts10")
-        eom = eom.rename(columns={
-            "total_additional": "yale_rate_eom",
+        day_weighted = monthly_sums.rate_days.div(monthly_sums.days).rename("yale_rate_day_weighted")
+        snapshot_columns = ["hts10", "total_additional", "valid_from"]
+        snapshot_columns += list(TARIFF_COMPONENTS)
+        snapshot_columns += [f"{component}_since" for component in TARIFF_COMPONENTS]
+        snapshot = rates[(rates.valid_from <= reference) & (rates.valid_until >= reference)].sort_values(["hts10", "valid_from"]).drop_duplicates("hts10", keep="last")[snapshot_columns].set_index("hts10")
+        snapshot = snapshot.rename(columns={
+            "total_additional": "yale_rate_effective",
             "valid_from": "yale_valid_from",
             **{component: f"yale_{component}" for component in TARIFF_COMPONENTS},
             **{f"{component}_since": f"yale_{component}_since" for component in TARIFF_COMPONENTS},
         })
-        joined = monthly.to_frame().join(eom, how="left").reset_index()
+        eom = rates[(rates.valid_from <= end) & (rates.valid_until >= end)].sort_values(["hts10", "valid_from"]).drop_duplicates("hts10", keep="last")[["hts10", "total_additional"]].set_index("hts10").rename(columns={"total_additional": "yale_rate_eom"})
+        joined = snapshot.join(day_weighted, how="outer").join(eom, how="outer").reset_index()
         joined["period"] = period
+        joined["yale_reference_date"] = reference
         parts.append(joined)
     if not parts:
         return df
     lookup = pd.concat(parts, ignore_index=True)
-    yale_columns = ["yale_rate_month", "yale_rate_eom", "yale_valid_from"]
+    yale_columns = ["yale_rate_effective", "yale_rate_day_weighted", "yale_rate_eom", "yale_reference_date", "yale_valid_from"]
     yale_columns += [f"yale_{component}" for component in TARIFF_COMPONENTS]
     yale_columns += [f"yale_{component}_since" for component in TARIFF_COMPONENTS]
     base = df.drop(columns=yale_columns, errors="ignore")
-    return base.merge(lookup, on=["period", "hts10"], how="left")
+    return apply_discrete_treatment(base.merge(lookup, on=["period", "hts10"], how="left"))
 
 
 def monthly_series(df: pd.DataFrame) -> list[dict]:
@@ -164,9 +285,11 @@ def monthly_series(df: pd.DataFrame) -> list[dict]:
 def export_public_dataset(df: pd.DataFrame, output: Path, manifest_path: Path, source_path: Path, yale_meta: dict) -> None:
     """Write the reusable month × HTSUS10 analytical table and its machine-readable manifest."""
     public = df.copy()
-    public["additional_rate_month"] = pd.to_numeric(public["yale_rate_month"], errors="coerce")
-    public["additional_rate_eom"] = pd.to_numeric(public["yale_rate_eom"], errors="coerce")
-    public["tariff_band"] = public["additional_rate_month"].map(tariff_band)
+    public["additional_rate_effective"] = pd.to_numeric(public["yale_rate_effective"], errors="coerce")
+    public["yale_modeled_rate_reference"] = pd.to_numeric(public["yale_rate_modeled"], errors="coerce")
+    public["yale_modeled_rate_day_weighted"] = pd.to_numeric(public["yale_rate_day_weighted"], errors="coerce")
+    public["yale_modeled_rate_eom"] = pd.to_numeric(public["yale_rate_eom"], errors="coerce")
+    public["tariff_band"] = public["additional_rate_effective"].map(tariff_band)
     rename = {
         "hts10_description": "description_en",
         **{f"yale_{component}": component for component in TARIFF_COMPONENTS},
@@ -177,7 +300,9 @@ def export_public_dataset(df: pd.DataFrame, output: Path, manifest_path: Path, s
         "period", "country_code", "country_name", "hts10", "description_en",
         "general_value_usd", "consumption_value_usd", "dutiable_value_usd", "calculated_duties_usd",
         "general_qty1", "general_qty2", "consumption_qty1", "consumption_qty2", "unit_qty1", "unit_qty2",
-        "additional_rate_month", "additional_rate_eom", "tariff_band", "yale_valid_from",
+        "additional_rate_effective", "tariff_band", "tariff_treatment_status", "tariff_treatment_note", "tariff_rate_qualifier",
+        "yale_modeled_rate_reference", "yale_modeled_rate_day_weighted", "yale_modeled_rate_eom",
+        "yale_reference_date", "yale_valid_from",
         *TARIFF_COMPONENTS.keys(), *[f"{component}_since" for component in TARIFF_COMPONENTS],
     ]
     for column in preferred:
@@ -196,7 +321,8 @@ def export_public_dataset(df: pd.DataFrame, output: Path, manifest_path: Path, s
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "census": {"endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs", "sha256": sha256(source_path)},
         "yale": yale_meta,
-        "rate_method": "total_additional weighted by calendar days in force within each month; end-of-month rate reported separately",
+        "primary_rate_method": f"discrete potential-surcharge classification at HTSUS10 on calendar day {MONTHLY_REFERENCE_DAY}; direct civil aircraft are classified at 0 subject to General Note 6, other use-conditioned lines default to the full headline rate, and content-dependent measures use the highest potentially applicable statutory rate with an up_to qualifier",
+        "yale_auxiliary_fields": "yale_modeled_rate_reference and Yale day-weighted/end-of-month fields preserve the source model for audit only; they do not determine dashboard bands",
         "value_basis": "U.S. imports for consumption (CON_VAL_MO)",
         "license_note": "Repository code is MIT licensed; source data remain subject to their original terms.",
     }
@@ -205,38 +331,39 @@ def export_public_dataset(df: pd.DataFrame, output: Path, manifest_path: Path, s
 
 
 def tariff_exposure(df: pd.DataFrame) -> tuple[list[dict], dict[str, list[dict]]]:
-    if not pd.to_numeric(df["yale_rate_month"], errors="coerce").notna().any():
+    if not pd.to_numeric(df["yale_rate_effective"], errors="coerce").notna().any():
         return [], {}
-    work = df[["period", "hts10", "consumption_value_usd", "yale_rate_month"]].copy()
-    work["rate"] = pd.to_numeric(work["yale_rate_month"], errors="coerce")
+    work = df[["period", "hts10", "consumption_value_usd", "yale_rate_effective"]].copy()
+    work["rate"] = pd.to_numeric(work["yale_rate_effective"], errors="coerce")
     work["band"] = work["rate"].map(tariff_band)
     labels = {key: label for key, label, _lo, _hi in TARIFF_BANDS}
     order = [key for key, _label, _lo, _hi in TARIFF_BANDS]
     series = []
     for period, month in work.groupby("period", sort=True):
         total = float(month.consumption_value_usd.sum())
-        matched = month[month.rate.notna()]
+        matched = month[month.band.notna()]
         matched_value = float(matched.consumption_value_usd.sum())
-        weighted_rate = float((matched.consumption_value_usd * matched.rate).sum() / matched_value) if matched_value else None
         bands = []
         for key in order:
             value = float(month.loc[month.band == key, "consumption_value_usd"].sum())
             bands.append({"key": key, "label": labels[key], "value_usd": value, "share_total": value / total if total else 0})
+        nonzero_bands = [band for band in bands if band["key"] != "free"]
+        dominant = max(nonzero_bands, key=lambda item: item["value_usd"], default=None)
         series.append({
             "period": period, "total_usd": total, "matched_usd": matched_value,
             "coverage_pct": matched_value / total if total else 0,
-            "potentially_tariffed_pct": float(month.loc[month.rate > 0, "consumption_value_usd"].sum()) / total if total else 0,
-            "weighted_average_rate": weighted_rate, "bands": bands,
+            "potentially_surcharged_pct": float(month.loc[month.rate > 0, "consumption_value_usd"].sum()) / total if total else 0,
+            "dominant_surcharge_band": dominant["label"] if dominant and dominant["value_usd"] > 0 else "0%",
+            "dominant_surcharge_share": dominant["share_total"] if dominant and dominant["value_usd"] > 0 else 0,
+            "bands": bands,
         })
 
     transitions: dict[str, list[dict]] = {}
     periods = sorted(work.period.unique())
     for before, after in zip(periods, periods[1:]):
-        prev = work[work.period == before][["hts10", "rate"]].rename(columns={"rate": "rate_before"})
-        curr = work[work.period == after][["hts10", "consumption_value_usd", "rate"]].rename(columns={"rate": "rate_after"})
-        joined = curr.merge(prev, on="hts10", how="inner").dropna(subset=["rate_before", "rate_after"])
-        joined["from"] = joined.rate_before.map(tariff_band)
-        joined["to"] = joined.rate_after.map(tariff_band)
+        prev = work[work.period == before][["hts10", "band"]].rename(columns={"band": "from"})
+        curr = work[work.period == after][["hts10", "consumption_value_usd", "band"]].rename(columns={"band": "to"})
+        joined = curr.merge(prev, on="hts10", how="inner").dropna(subset=["from", "to"])
         flows = joined.groupby(["from", "to"], as_index=False).consumption_value_usd.sum()
         flows = flows[flows.consumption_value_usd > 0].sort_values("consumption_value_usd", ascending=False)
         transitions[after] = json.loads(flows.round(6).to_json(orient="records"))
@@ -251,13 +378,14 @@ def product_drivers(
 ) -> dict[str, dict[str, list[dict]]]:
     base = df.copy()
     value = base["consumption_value_usd"]
-    rate_month = pd.to_numeric(base["yale_rate_month"], errors="coerce").fillna(0)
+    rate_effective = pd.to_numeric(base["yale_rate_effective"], errors="coerce")
+    rate_day_weighted = pd.to_numeric(base["yale_rate_day_weighted"], errors="coerce")
     rate_eom = pd.to_numeric(base["yale_rate_eom"], errors="coerce").fillna(0)
-    base["tariff_value_month"] = value * rate_month
+    base["tariff_value_effective"] = value * rate_effective.fillna(0)
+    base["tariff_value_day_weighted"] = value * rate_day_weighted.fillna(0)
     base["tariff_value_eom"] = value * rate_eom
-    base["exposed_value"] = value.where(rate_month > 0, 0)
-    for component in TARIFF_COMPONENTS:
-        base[f"weighted_{component}"] = value * pd.to_numeric(base[f"yale_{component}"], errors="coerce").fillna(0)
+    base["exposed_value"] = value.where(rate_effective > 0, 0)
+    base["classified_value"] = value.where(rate_effective.notna(), 0)
 
     pt = nomenclature or {}
     result: dict[str, dict[str, list[dict]]] = {}
@@ -265,43 +393,57 @@ def product_drivers(
         code_col = f"code_{level}"
         sums = {
             "consumption_value_usd": ("consumption_value_usd", "sum"),
-            "tariff_value_month": ("tariff_value_month", "sum"),
+            "tariff_value_effective": ("tariff_value_effective", "sum"),
+            "tariff_value_day_weighted": ("tariff_value_day_weighted", "sum"),
             "tariff_value_eom": ("tariff_value_eom", "sum"),
             "exposed_value": ("exposed_value", "sum"),
+            "classified_value": ("classified_value", "sum"),
         }
-        sums.update({f"weighted_{component}": (f"weighted_{component}", "sum") for component in TARIFF_COMPONENTS})
         grouped = base.groupby(["period", code_col], as_index=False).agg(**sums).rename(columns={code_col: "code"})
-        grouped["tariff_rate"] = grouped.tariff_value_month.div(grouped.consumption_value_usd).fillna(0)
+        grouped["tariff_rate_trade_weighted"] = grouped.tariff_value_effective.div(grouped.classified_value.replace(0, pd.NA))
+        grouped["tariff_rate_day_weighted"] = grouped.tariff_value_day_weighted.div(grouped.consumption_value_usd).fillna(0)
         grouped["tariff_rate_eom"] = grouped.tariff_value_eom.div(grouped.consumption_value_usd).fillna(0)
         grouped["tariff_exposure"] = grouped.exposed_value.div(grouped.consumption_value_usd).fillna(0)
-        for component in TARIFF_COMPONENTS:
-            grouped[f"avg_{component}"] = grouped[f"weighted_{component}"].div(grouped.consumption_value_usd).fillna(0)
 
         positive = base[base.consumption_value_usd > 0].copy()
         positive["code"] = positive[code_col]
-        positive["numeric_rate_eom"] = pd.to_numeric(positive["yale_rate_eom"], errors="coerce")
+        positive["numeric_rate_effective"] = pd.to_numeric(positive["yale_rate_effective"], errors="coerce")
         ranges = positive.groupby(["period", "code"], as_index=False).agg(
-            tariff_rate_min=("numeric_rate_eom", "min"), tariff_rate_max=("numeric_rate_eom", "max")
+            tariff_rate_min=("numeric_rate_effective", "min"), tariff_rate_max=("numeric_rate_effective", "max")
         )
-        leaders = positive.sort_values("consumption_value_usd", ascending=False).drop_duplicates(["period", "code"])
-        leaders = leaders[["period", "code", "hts10", "hts10_description"]].rename(
-            columns={"hts10": "leader_hts10", "hts10_description": "description"}
-        )
-        grouped = grouped.merge(ranges, on=["period", "code"], how="left").merge(leaders, on=["period", "code"], how="left")
-
-        for component in TARIFF_COMPONENTS:
-            rate_col = f"yale_{component}"
-            since_col = f"yale_{component}_since"
-            active = base[pd.to_numeric(base[rate_col], errors="coerce").fillna(0) > 0].copy()
-            if active.empty:
-                grouped[f"since_{component}"] = pd.NA
-                continue
-            active["code"] = active[code_col]
-            active["component_weight"] = active["consumption_value_usd"] * pd.to_numeric(active[rate_col], errors="coerce").fillna(0)
-            since = active.groupby(["period", "code", since_col], dropna=True, as_index=False).component_weight.sum()
-            since = since.sort_values("component_weight", ascending=False).drop_duplicates(["period", "code"])
-            since = since[["period", "code", since_col]].rename(columns={since_col: f"since_{component}"})
-            grouped = grouped.merge(since, on=["period", "code"], how="left")
+        rate_values = positive.dropna(subset=["numeric_rate_effective"]).groupby(
+            ["period", "code", "numeric_rate_effective"], as_index=False
+        ).consumption_value_usd.sum()
+        dominant = rate_values.sort_values(
+            ["period", "code", "consumption_value_usd", "numeric_rate_effective"],
+            ascending=[True, True, False, False],
+        ).drop_duplicates(["period", "code"]).rename(columns={"numeric_rate_effective": "tariff_rate"})
+        dominant = dominant[["period", "code", "tariff_rate"]]
+        representatives = positive.merge(
+            dominant, left_on=["period", "code", "numeric_rate_effective"],
+            right_on=["period", "code", "tariff_rate"], how="inner",
+        ).sort_values("consumption_value_usd", ascending=False).drop_duplicates(["period", "code"])
+        representative_columns = ["period", "code", "hts10", "hts10_description", "tariff_treatment_status", "tariff_treatment_note", "tariff_rate_qualifier"]
+        representative_columns += [f"yale_{component}" for component in TARIFF_COMPONENTS]
+        representative_columns += [f"yale_{component}_since" for component in TARIFF_COMPONENTS]
+        representatives = representatives[representative_columns].rename(columns={
+            "hts10": "leader_hts10", "hts10_description": "description",
+            **{f"yale_{component}": f"rep_{component}" for component in TARIFF_COMPONENTS},
+            **{f"yale_{component}_since": f"rep_{component}_since" for component in TARIFF_COMPONENTS},
+        })
+        fallback = positive.sort_values("consumption_value_usd", ascending=False).drop_duplicates(["period", "code"])[
+            ["period", "code", "hts10", "hts10_description", "tariff_treatment_status", "tariff_treatment_note", "tariff_rate_qualifier"]
+        ].rename(columns={
+            "hts10": "fallback_hts10", "hts10_description": "fallback_description",
+            "tariff_treatment_status": "fallback_status", "tariff_treatment_note": "fallback_note", "tariff_rate_qualifier": "fallback_qualifier",
+        })
+        grouped = grouped.merge(dominant, on=["period", "code"], how="left")
+        grouped = grouped.merge(ranges, on=["period", "code"], how="left").merge(representatives, on=["period", "code"], how="left").merge(fallback, on=["period", "code"], how="left")
+        grouped["leader_hts10"] = grouped["leader_hts10"].fillna(grouped["fallback_hts10"])
+        grouped["description"] = grouped["description"].fillna(grouped["fallback_description"])
+        grouped["tariff_treatment_status"] = grouped["tariff_treatment_status"].fillna(grouped["fallback_status"])
+        grouped["tariff_treatment_note"] = grouped["tariff_treatment_note"].fillna(grouped["fallback_note"])
+        grouped["tariff_rate_qualifier"] = grouped["tariff_rate_qualifier"].fillna(grouped["fallback_qualifier"])
 
         by_period: dict[str, list[dict]] = {}
         periods = sorted(grouped.period.unique())
@@ -311,9 +453,10 @@ def product_drivers(
             before_columns = ["consumption_value_usd", "description", "leader_hts10"]
             after_columns = [
                 "consumption_value_usd", "description", "leader_hts10", "tariff_rate", "tariff_rate_eom",
-                "tariff_exposure", "tariff_rate_min", "tariff_rate_max",
-                *[f"avg_{component}" for component in TARIFF_COMPONENTS],
-                *[f"since_{component}" for component in TARIFF_COMPONENTS],
+                "tariff_rate_trade_weighted", "tariff_rate_day_weighted", "tariff_exposure",
+                "tariff_rate_min", "tariff_rate_max", "tariff_treatment_status", "tariff_treatment_note", "tariff_rate_qualifier",
+                *[f"rep_{component}" for component in TARIFF_COMPONENTS],
+                *[f"rep_{component}_since" for component in TARIFF_COMPONENTS],
             ]
             joined = a[before_columns].rename(columns={
                 "consumption_value_usd": "before_usd", "description": "description_before", "leader_hts10": "leader_before"
@@ -343,26 +486,39 @@ def product_drivers(
                 row["description_en"] = row.pop("description", "")
                 component_candidates = []
                 for component, label in TARIFF_COMPONENTS.items():
-                    component_rate = row.pop(f"avg_{component}", None)
-                    since = row.pop(f"since_{component}", None)
+                    component_rate = row.pop(f"rep_{component}", None)
+                    since = row.pop(f"rep_{component}_since", None)
                     if component_rate is not None and component_rate > 0.000001:
                         component_candidates.append({
                             "key": component, "label": label, "rate": component_rate,
                             "since": str(since)[:10] if since else None,
                         })
-                    row.pop(f"weighted_{component}", None)
-                components = applicable_components(component_candidates, row.get("tariff_rate_eom"))
+                components = applicable_components(component_candidates, row.get("tariff_rate"))
                 row["tariff_components"] = components
-                row["tariff_measure"] = " + ".join(item["label"] for item in components) if components else "Sem tarifa adicional modelada"
+                treatment = row.get("tariff_treatment_status")
+                if treatment == "conditional_scope":
+                    component_label = components[0]["label"] if components else "Medida condicionada"
+                    row["tariff_measure"] = f"{component_label} — até {float(row.get('tariff_rate') or 0):.0%}"
+                elif treatment == "conditional_exemption":
+                    row["tariff_measure"] = "Isenção condicionada — aeronave civil"
+                else:
+                    row["tariff_measure"] = " + ".join(item["label"] for item in components) if components else "Sem sobretarifa adicional"
                 row["tariff_since"] = components[0]["since"] if components else None
-                row["tariff_regime"] = "Tarifa adicional média mensal ponderada pela composição do código"
-                for unused in ["description_before", "description_after", "leader_before", "leader_after"]:
+                row["tariff_regime"] = (
+                    "Tratamento jurídico discreto no HTSUS10 pela regra do dia 15"
+                    if level == 10 else
+                    "Tratamento predominante entre os HTSUS10 do código pela regra do dia 15"
+                )
+                row["tariff_band"] = tariff_band(row.get("tariff_rate"))
+                for unused in ["description_before", "description_after", "leader_before", "leader_after", "fallback_hts10", "fallback_description", "fallback_status", "fallback_note", "fallback_qualifier"]:
                     row.pop(unused, None)
                 if level == 4:
                     row["hs4"] = code
                     note = (annotations or {}).get(f"{after}|{code}")
                     if note:
-                        row.update(note)
+                        for key in ("product_pt", "editorial_reading", "milestone_id"):
+                            if key in note:
+                                row[key] = note[key]
                 row["product_pt"] = pt.get(pt_level, {}).get(pt_code) or row.get("product_pt") or code
             by_period[after] = rows
         result[str(level)] = by_period
@@ -399,8 +555,9 @@ def main() -> None:
             "latest_period": monthly[-1]["period"], "census_sha256": sha256(imports_path),
             "census_endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
             "yale": yale_meta,
-            "yale_product_join": bool(pd.to_numeric(df["yale_rate_month"], errors="coerce").notna().any()),
-            "method": "Census consumption imports; adjacent-month HS2/4/6/8/10 decomposition; Yale rates calendar-day weighted within each month when the product panel is available.",
+            "yale_product_join": bool(pd.to_numeric(df["yale_rate_effective"], errors="coerce").notna().any()),
+            "method": f"Census consumption imports; adjacent-month HS2/4/6/8/10 decomposition; discrete potential-surcharge classification on day {MONTHLY_REFERENCE_DAY}. Yale applicability shares are retained only as auxiliary audit fields; content-dependent measures are assigned to the highest potentially applicable statutory band and labeled up to in product detail.",
+            "monthly_reference_day": MONTHLY_REFERENCE_DAY,
             "nomenclature_pt": nomenclature.get("meta", {}),
         },
         "monthly": monthly,
@@ -415,7 +572,7 @@ def main() -> None:
             "unique_hts10": int(df.hts10.nunique()), "duplicate_period_hts10": int(df.duplicated(["period", "hts10"]).sum()),
             "missing_description": int(df.hts10_description.isna().sum()),
             "total_imports_usd": int(df.consumption_value_usd.sum()),
-            "warning": "Statutory Yale rates and observed Census duties are distinct measures; movements are descriptive, not causal estimates.",
+            "warning": "Discrete surcharge classification and observed Census duties are distinct measures; conditional eligibility requires entry-level evidence, and movements are descriptive rather than causal estimates.",
         },
     }
     output = Path(args.output)

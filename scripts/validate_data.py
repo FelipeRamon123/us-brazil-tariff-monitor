@@ -18,7 +18,8 @@ if data["meta"].get("yale_product_join"):
     assert len(data["tariff_bands"]) == len(periods)
     for row in data["tariff_bands"]:
         assert 0 <= row["coverage_pct"] <= 1
-        assert 0 <= row["potentially_tariffed_pct"] <= 1
+        assert 0 <= row["potentially_surcharged_pct"] <= 1
+        assert "dominant_surcharge_band" in row
         assert abs(sum(b["share_total"] for b in row["bands"]) - row["coverage_pct"]) < 1e-6
 print(f"PASS: {len(periods)} months; latest={periods[-1]}; milestones={len(data['milestones'])}")
 

@@ -16,17 +16,23 @@ Granularidade: `mês × país × HTSUS10`
 | `calculated_duties_usd` | Direitos calculados reportados pelo Census (`CAL_DUT_MO`) |
 | `general_qty1/2`, `consumption_qty1/2`, `unit_qty1/2` | Quantidades e unidades estatísticas quando publicadas |
 
-## Exposição tarifária modelada
+## Classificação de sobretarifas
 
 | Campo | Definição |
 |---|---|
-| `additional_rate_month` | `total_additional` do Yale ponderada pelos dias de vigência dentro do mês |
-| `additional_rate_eom` | Taxa adicional vigente no último dia do mês |
+| `additional_rate_effective` | Alíquota discreta de referência; em medidas dependentes de conteúdo, contém a maior alíquota estatutária potencial |
 | `tariff_band` | Faixa usada no dashboard |
-| `yale_valid_from` | Início do intervalo vigente no fim do mês |
-| `rate_*` | Componentes da taxa adicional por autoridade, no fim do mês |
+| `tariff_treatment_status` | `classified`, `conditional_exemption`, `conditional_default_full` ou `conditional_scope` |
+| `tariff_treatment_note` | Ressalva aplicável à classificação da linha |
+| `tariff_rate_qualifier` | `exact` para alíquota direta, `up_to` para alíquota potencial máxima ou `unmatched` |
+| `yale_modeled_rate_reference` | Taxa original do Yale na data de referência; campo auxiliar de auditoria |
+| `yale_modeled_rate_day_weighted` | Média original do Yale ponderada pelos dias; campo auxiliar de auditoria |
+| `yale_modeled_rate_eom` | Taxa original do Yale no último dia do mês; campo auxiliar de auditoria |
+| `yale_reference_date` | Data de referência mensal, fixada no dia 15 |
+| `yale_valid_from` | Início do intervalo vigente na data de referência |
+| `rate_*` | Componentes da sobretarifa por autoridade na data de referência |
 | `rate_*_since` | Data desde a qual o componente vigente permanece no nível informado |
 
-Taxas são frações decimais: `0.25` corresponde a 25%. A taxa estatutária modelada e os direitos calculados observados são medidas distintas.
+Taxas são frações decimais: `0.25` corresponde a 25%. O campo principal não usa probabilidades de utilização. Aeronaves civis diretamente identificáveis são classificadas em 0%, condicionadas à General Note 6; outros bens com exceção por uso recebem a alíquota cheia por padrão. Incidências dependentes de conteúdo usam a maior alíquota potencial para a faixa — `0.50`, por exemplo, entra em `>40%` — e recebem `tariff_rate_qualifier=up_to`. A sobretarifa não inclui tarifa-base, antidumping, compensatórias ou medidas fora do tracker.
 
 Cada release inclui também `dataset-manifest.json`, com data de corte, contagem de linhas, hash do insumo Census, release Yale e método de alinhamento temporal.

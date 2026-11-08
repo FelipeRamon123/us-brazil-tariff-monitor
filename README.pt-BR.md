@@ -1,8 +1,8 @@
-# Tarifas dos EUA na pauta exportadora brasileira
+# Sobretarifas dos EUA na pauta exportadora brasileira
 
 [English](README.md) · Dashboard publicado no GitHub Pages
 
-Monitor mensal das importações dos Estados Unidos provenientes do Brasil, com decomposição dos produtos que explicam cada alta ou queda e uma faixa cronológica das medidas tarifárias modeladas pelo **Tariff Rate Tracker**, do The Budget Lab at Yale.
+Monitor mensal das importações dos Estados Unidos provenientes do Brasil, com decomposição dos produtos que explicam cada alta ou queda e uma classificação discreta das medidas tarifárias derivada do **Tariff Rate Tracker**, do The Budget Lab at Yale, e dos atos normativos aplicáveis.
 
 Este repositório é uma **showcase**: a aplicação e os dados processados ficam aqui, enquanto os conectores reutilizáveis e exemplos de acesso às fontes pertencem ao [Official Data API Toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit).
 
@@ -20,7 +20,7 @@ O dashboard segue o mesmo padrão de acesso do showcase Census: a interface apon
 
 O dicionário de campos está em [docs/DATASET.md](docs/DATASET.md).
 
-A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de importação para consumo, valor geral, valor dutiável, direitos calculados, quantidades, taxa adicional mensal ponderada pelos dias de vigência, taxa no fim do mês e componentes por autoridade.
+A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de importação para consumo, valor geral, valor dutiável, direitos calculados, quantidades, sobretarifa discreta de referência, estado do tratamento, ressalva de elegibilidade e componentes por autoridade. As taxas modeladas pelo Yale são preservadas apenas em campos auxiliares de auditoria.
 
 ## O que o projeto entrega
 
@@ -29,10 +29,10 @@ A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de
 - gráfico interativo principal com modos de composição relativa e valor absoluto, seleção de faixas e exibição opcional dos marcos tarifários e valores mensais;
 - clique no mês para ver as maiores altas e quedas por SH2, SH4, SH6, HTS8 ou HTSUS10;
 - nomes oficiais em português para SH2/SH4/SH6 e contexto SH6 em português para os desdobramentos americanos HTS8/HTSUS10;
-- tarifa adicional média no mês, medida aplicável e início de vigência diretamente na tabela de produtos;
-- área empilhada em 100% da pauta por seis faixas de tarifa adicional, com média ponderada, cobertura do cruzamento e migração mensal entre faixas;
+- faixa de sobretarifa predominante, medida aplicável e condição de elegibilidade diretamente na tabela de produtos;
+- área empilhada em 100% da pauta por faixas discretas de sobretarifa; incidências dependentes de conteúdo entram na maior faixa potencial e aparecem como “até X%” no detalhe;
 - valor antes/depois, variação absoluta, percentual e contribuição para o movimento do mês;
-- taxa estatutária adicional média e parcela exposta quando o painel HTS10 do Yale está disponível;
+- sobretarifa discreta de referência e parcela exposta quando a incidência é identificável no HTS10;
 - controles internos de qualidade, hashes e versões das fontes preservados nos arquivos de dados e nos testes, sem exposição na interface de portfólio;
 - atualização automática, release mensal de dados e publicação no GitHub Pages.
 
@@ -46,7 +46,7 @@ A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de
 
 2. **The Budget Lab at Yale — Tariff Rate Tracker**  
    Repositório: <https://github.com/Budget-Lab-Yale/tariff-rate-tracker>  
-   O workflow registra tag, data e URL exatas da release. Taxas são estatutárias modeladas, não direitos efetivamente recolhidos.
+   O workflow registra tag, data e URL exatas da release. As probabilidades de utilização do Yale não são usadas na camada principal; quando a incidência depende de conteúdo, o dashboard adota a maior alíquota estatutária potencial para a faixa e identifica o valor como “até X%”.
    Código reutilizável: [módulo Yale do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/yale-tariff-rate-tracker).
 
 3. **Receita Federal — Sistema Classif / NCM**
@@ -88,6 +88,12 @@ python scripts/validate_data.py
 ```
 
 Veja [docs/API_E_METODO.md](docs/API_E_METODO.md) para os trechos reutilizáveis e a definição exata do cruzamento temporal.
+
+### Regra mensal da sobretarifa
+
+A classificação principal usa o tratamento discreto vigente no dia 15 de cada competência. Medidas iniciadas até o dia 15 entram no próprio mês; medidas posteriores entram no mês seguinte. Hipóteses de utilização do Yale ficam somente em campos auxiliares. Para medidas por conteúdo, a linha entra na faixa da maior alíquota potencial — por exemplo, “até 50%” entra em `>40%` — e a condição é informada na decomposição.
+
+“Sobretarifa de referência” não inclui a tarifa-base normal, antidumping, medidas compensatórias ou incidências fora do escopo do tracker. Casos cuja elegibilidade depende de uso, conteúdo ou documentação são identificados separadamente.
 
 ## Limite interpretativo
 

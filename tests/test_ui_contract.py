@@ -16,13 +16,14 @@ def test_portfolio_interface_contract():
     assert "04 / COMO LER" not in html
     assert 'data-driver-level="2"' in html
     assert 'data-driver-level="10"' in html
-    assert "Tarifa no mês" in html
+    assert "Sobretarifa no mês" in html
     assert "Medida e vigência" in html
     assert 'id="repoLink"' in html
     assert 'id="powerQueryLink"' in html
     assert 'id="pythonLink"' in html
     assert 'id="datasetLink"' in html
     assert 'src="assets/site-config.js"' in html
+    assert 'src="assets/app.js?v=20261108-2"' in html
 
 
 def test_portfolio_link_configuration():
@@ -44,6 +45,15 @@ def test_visual_mark_diagnostic_is_wired():
     assert "data-chart-mark" in javascript
     assert "visibleMeasures" in javascript
     assert "exposure-event-line" in javascript
+    assert "exposure-event-card" in javascript
+    assert "exposure-event-box" in javascript
+    assert "markerDateLabel" in javascript
+    assert "const hasVisibleMeasures=state.showPolicyMarkers&&state.visibleMeasures.size>0" in javascript
+    assert "t:hasVisibleMeasures?340:(state.showValueLabels?48:26)" in javascript
+    assert "exposure-event-dot" not in javascript
+    assert "exposure-event-label" not in javascript
+    assert "chart-unit-label" not in javascript
+    assert "18+(i%2)*15" not in javascript
     assert "drivers_by_level" in javascript
     assert "tariff_components" in javascript
 
@@ -55,3 +65,25 @@ def test_language_toggle_is_functional():
     assert "POLICY_EN" in javascript
     assert "GLOSSARY" in javascript
     assert 'alert("A documentação completa em inglês' not in javascript
+
+
+def test_primary_metric_is_discrete_surcharge():
+    html = Path("index.html").read_text(encoding="utf-8")
+    javascript = Path("assets/app.js").read_text(encoding="utf-8")
+    assert "alíquota adicional discreta" in html
+    assert "Alíquota potencial “até”" in html
+    assert "média probabilística" in html
+    assert "potentially_surcharged_pct" in javascript
+    assert "weighted_average_rate" not in javascript
+
+
+def test_month_and_tariff_band_filters_are_available():
+    html = Path("index.html").read_text(encoding="utf-8")
+    javascript = Path("assets/app.js").read_text(encoding="utf-8")
+    assert html.count("data-period-select") >= 2
+    assert 'id="driverBandSelect"' in html
+    assert "renderPeriodSelectors" in javascript
+    assert "state.driverBand" in javascript
+    assert html.index('id="produtos"') < html.index('id="medidas"')
+    assert "03 / MEDIDAS COMERCIAIS" in html
+    assert "Metodologia: Yale" not in html
