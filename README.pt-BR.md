@@ -25,6 +25,7 @@ A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de
 ## O que o projeto entrega
 
 - série mensal de importações para consumo no nível HTS10, a partir de janeiro de 2025;
+- interface integralmente bilíngue em português e inglês, incluindo gráficos, controles, marcos tarifários, análise de produtos, datas e valores;
 - gráfico interativo principal com modos de composição relativa e valor absoluto, seleção de faixas e exibição opcional dos marcos tarifários e valores mensais;
 - clique no mês para ver as maiores altas e quedas por SH2, SH4, SH6, HTS8 ou HTSUS10;
 - nomes oficiais em português para SH2/SH4/SH6 e contexto SH6 em português para os desdobramentos americanos HTS8/HTSUS10;
@@ -46,7 +47,7 @@ A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de
 2. **The Budget Lab at Yale — Tariff Rate Tracker**  
    Repositório: <https://github.com/Budget-Lab-Yale/tariff-rate-tracker>  
    O workflow registra tag, data e URL exatas da release. Taxas são estatutárias modeladas, não direitos efetivamente recolhidos.
-   Código reutilizável proposto: [módulo Yale do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/review/yale-tariff-tracker-module/sources/yale-tariff-rate-tracker).
+   Código reutilizável: [módulo Yale do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/yale-tariff-rate-tracker).
 
 3. **Receita Federal — Sistema Classif / NCM**
    JSON oficial: `https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json`
