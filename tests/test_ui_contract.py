@@ -18,6 +18,18 @@ def test_portfolio_interface_contract():
     assert 'data-driver-level="10"' in html
     assert "Tarifa no mês" in html
     assert "Medida e vigência" in html
+    assert 'id="repoLink"' in html
+    assert 'id="powerQueryLink"' in html
+    assert 'id="pythonLink"' in html
+    assert 'id="datasetLink"' in html
+    assert 'src="assets/site-config.js"' in html
+
+
+def test_portfolio_link_configuration():
+    config = Path("assets/site-config.js").read_text(encoding="utf-8")
+    assert "07_monthly_imports_by_country_htsus10.m" in config
+    assert "03_build_monthly_tariff_exposure.py" in config
+    assert "us-brazil-tariff-exposure.csv.gz" in config
 
 
 def test_mobile_driver_bars_remain_visible():

@@ -30,6 +30,20 @@
   </header>
 
   <main class="shell">
+    <section class="resource-strip" aria-labelledby="resourceTitle">
+      <div class="resource-copy">
+        <p class="section-index">CÓDIGO E DADOS</p>
+        <h2 id="resourceTitle">Reproduza a consulta e trabalhe com a base.</h2>
+        <p>Conectores, exemplos e o arquivo processado seguem o mesmo padrão do Official Data API Toolkit.</p>
+      </div>
+      <div class="resource-grid">
+        <a id="repoLink" class="resource-link primary"><span class="resource-icon">&lt;/&gt;</span><span><strong>Explorar o toolkit</strong><small>Conectores e exemplos</small></span></a>
+        <a id="powerQueryLink" class="resource-link"><span class="resource-icon">M</span><span><strong>Power Query</strong><small>Consulta mensal ao U.S. Census</small></span></a>
+        <a id="pythonLink" class="resource-link"><span class="resource-icon">Py</span><span><strong>Python</strong><small>Pipeline Census + Yale</small></span></a>
+        <a id="datasetLink" class="resource-link"><span class="resource-icon">↓</span><span><strong>Baixar a base</strong><small>Release mais recente</small></span></a>
+      </div>
+    </section>
+
     <section class="kpi-row" aria-label="Indicadores do mês selecionado">
       <article><span>Mês selecionado</span><strong id="kpiMonth">—</strong><small id="kpiCut">—</small></article>
       <article><span>Exportações brasileiras aos EUA</span><strong id="kpiImports">—</strong><small id="kpiMonthlyChange">—</small></article>
@@ -132,6 +146,7 @@
   </main>
 
   <footer class="shell"><div><strong>Tarifas dos EUA na pauta exportadora brasileira</strong><span>Atualização mensal · código e documentação sob licença MIT</span></div><div class="footer-links"><a href="https://api.census.gov/data/timeseries/intltrade/imports/hs" target="_blank" rel="noreferrer">Dados: U.S. Census</a><a href="https://github.com/Budget-Lab-Yale/tariff-rate-tracker" target="_blank" rel="noreferrer">Metodologia: Yale</a><a href="https://github.com/FelipeRamon123/us-brazil-tariff-monitor" target="_blank" rel="noreferrer">Código e documentação</a><a href="https://github.com/FelipeRamon123/us-brazil-tariff-monitor/blob/main/LICENSE" target="_blank" rel="noreferrer">Licença MIT</a></div></footer>
+  <script src="assets/site-config.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>

@@ -82,7 +82,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dashboard.json data/audit.json data/nomenclature_pt.json
+          git add data/dashboard.json data/audit.json data/nomenclature_pt.json data/processed/
           git diff --cached --quiet || git commit -m "data: refresh Census and Yale dashboard"
           git push
 
@@ -95,6 +95,34 @@ jobs:
             data/raw/yale_brazil_rates.csv.gz
             data/raw/yale_release.json
           key: source-data-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Package reusable analytical dataset
+        run: |
+          test -f data/processed/us-brazil-tariff-exposure.csv.gz
+          test -f data/processed/dataset-manifest.json
+          cp data/processed/us-brazil-tariff-exposure.csv.gz us-brazil-tariff-exposure.csv.gz
+          cp data/processed/dataset-manifest.json dataset-manifest.json
+
+      - name: Upload dataset for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: us-brazil-tariff-exposure-${{ github.sha }}
+          path: |
+            us-brazil-tariff-exposure.csv.gz
+            dataset-manifest.json
+
+      - name: Publish monthly data release
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PERIOD=$(python -c "import json; print(json.load(open('dataset-manifest.json'))['latest_period'])")
+          TAG="data-${PERIOD}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" us-brazil-tariff-exposure.csv.gz dataset-manifest.json --clobber
+          else
+            gh release create "$TAG" us-brazil-tariff-exposure.csv.gz dataset-manifest.json --title "Dados até ${PERIOD}" --notes "Base mensal Brasil × HTSUS10 com valores do U.S. Census e exposição tarifária adicional modelada a partir do Yale Tariff Rate Tracker. Consulte dataset-manifest.json para corte, cobertura e método."
+          fi
 
       - uses: actions/configure-pages@v5
         if: vars.ENABLE_GITHUB_PAGES == 'true'

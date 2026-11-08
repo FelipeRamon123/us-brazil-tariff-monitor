@@ -8,6 +8,20 @@ Este repositório é uma **showcase**: a aplicação e os dados processados fica
 
 **[Abrir o preview público do dashboard →](https://us-brazil-tariff-monitor.feliperamondbr.chatgpt.site)**
 
+## Código e dados reutilizáveis
+
+O dashboard segue o mesmo padrão de acesso do showcase Census: a interface aponta diretamente para o toolkit, para os exemplos executáveis e para a base processada da release mais recente.
+
+- [consulta mensal ao U.S. Census em Power Query M](https://github.com/FelipeRamon123/official-data-api-toolkit/blob/main/sources/us-census/power-query/07_monthly_imports_by_country_htsus10.m);
+- [consulta mensal ao U.S. Census em Python](https://github.com/FelipeRamon123/official-data-api-toolkit/blob/main/sources/us-census/python/07_monthly_imports_by_country_htsus10.py);
+- [cruzamento mensal Census + Yale em Python](https://github.com/FelipeRamon123/official-data-api-toolkit/blob/main/sources/yale-tariff-rate-tracker/python/03_build_monthly_tariff_exposure.py);
+- [nomenclatura oficial em português](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/receita-ncm);
+- [base analítica da release mais recente](https://github.com/FelipeRamon123/us-brazil-tariff-monitor/releases/latest/download/us-brazil-tariff-exposure.csv.gz) e [manifesto técnico](https://github.com/FelipeRamon123/us-brazil-tariff-monitor/releases/latest/download/dataset-manifest.json).
+
+O dicionário de campos está em [docs/DATASET.md](docs/DATASET.md).
+
+A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de importação para consumo, valor geral, valor dutiável, direitos calculados, quantidades, taxa adicional mensal ponderada pelos dias de vigência, taxa no fim do mês e componentes por autoridade.
+
 ## O que o projeto entrega
 
 - série mensal de importações para consumo no nível HTS10, a partir de janeiro de 2025;
@@ -19,7 +33,7 @@ Este repositório é uma **showcase**: a aplicação e os dados processados fica
 - valor antes/depois, variação absoluta, percentual e contribuição para o movimento do mês;
 - taxa estatutária adicional média e parcela exposta quando o painel HTS10 do Yale está disponível;
 - controles internos de qualidade, hashes e versões das fontes preservados nos arquivos de dados e nos testes, sem exposição na interface de portfólio;
-- atualização automática e publicação no GitHub Pages.
+- atualização automática, release mensal de dados e publicação no GitHub Pages.
 
 ## Fontes
 

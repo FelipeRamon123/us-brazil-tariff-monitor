@@ -31,3 +31,13 @@ def test_tariff_band_contract():
         assert data["tariff_bands"]
         assert all(len(row["bands"]) == 6 for row in data["tariff_bands"])
 
+
+def test_release_dataset_contract():
+    import pandas as pd
+
+    manifest = json.loads(Path("data/processed/dataset-manifest.json").read_text(encoding="utf-8"))
+    dataset = pd.read_csv("data/processed/us-brazil-tariff-exposure.csv.gz", nrows=10, dtype={"hts10": str})
+    assert manifest["granularity"] == "month × country × HTSUS10"
+    assert manifest["latest_period"] == json.loads(Path("data/dashboard.json").read_text(encoding="utf-8"))["meta"]["latest_period"]
+    assert {"period", "hts10", "consumption_value_usd", "dutiable_value_usd", "calculated_duties_usd", "additional_rate_month", "additional_rate_eom"}.issubset(dataset.columns)
+

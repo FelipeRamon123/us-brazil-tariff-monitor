@@ -161,6 +161,49 @@ def monthly_series(df: pd.DataFrame) -> list[dict]:
     return json.loads(out.round(6).to_json(orient="records"))
 
 
+def export_public_dataset(df: pd.DataFrame, output: Path, manifest_path: Path, source_path: Path, yale_meta: dict) -> None:
+    """Write the reusable month × HTSUS10 analytical table and its machine-readable manifest."""
+    public = df.copy()
+    public["additional_rate_month"] = pd.to_numeric(public["yale_rate_month"], errors="coerce")
+    public["additional_rate_eom"] = pd.to_numeric(public["yale_rate_eom"], errors="coerce")
+    public["tariff_band"] = public["additional_rate_month"].map(tariff_band)
+    rename = {
+        "hts10_description": "description_en",
+        **{f"yale_{component}": component for component in TARIFF_COMPONENTS},
+        **{f"yale_{component}_since": f"{component}_since" for component in TARIFF_COMPONENTS},
+    }
+    public = public.rename(columns=rename)
+    preferred = [
+        "period", "country_code", "country_name", "hts10", "description_en",
+        "general_value_usd", "consumption_value_usd", "dutiable_value_usd", "calculated_duties_usd",
+        "general_qty1", "general_qty2", "consumption_qty1", "consumption_qty2", "unit_qty1", "unit_qty2",
+        "additional_rate_month", "additional_rate_eom", "tariff_band", "yale_valid_from",
+        *TARIFF_COMPONENTS.keys(), *[f"{component}_since" for component in TARIFF_COMPONENTS],
+    ]
+    for column in preferred:
+        if column not in public:
+            public[column] = pd.NA
+    output.parent.mkdir(parents=True, exist_ok=True)
+    public[preferred].sort_values(["period", "hts10"]).to_csv(output, index=False, compression="gzip")
+    manifest = {
+        "dataset": output.name,
+        "granularity": "month × country × HTSUS10",
+        "country_code": "3510",
+        "first_period": str(public["period"].min()),
+        "latest_period": str(public["period"].max()),
+        "rows": int(len(public)),
+        "unique_htsus10": int(public["hts10"].nunique()),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "census": {"endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs", "sha256": sha256(source_path)},
+        "yale": yale_meta,
+        "rate_method": "total_additional weighted by calendar days in force within each month; end-of-month rate reported separately",
+        "value_basis": "U.S. imports for consumption (CON_VAL_MO)",
+        "license_note": "Repository code is MIT licensed; source data remain subject to their original terms.",
+    }
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def tariff_exposure(df: pd.DataFrame) -> tuple[list[dict], dict[str, list[dict]]]:
     if not pd.to_numeric(df["yale_rate_month"], errors="coerce").notna().any():
         return [], {}
@@ -336,6 +379,8 @@ def main() -> None:
     parser.add_argument("--milestones", default="data/policy_milestones.json")
     parser.add_argument("--yale", default="data/raw/yale_brazil_rates.csv.gz")
     parser.add_argument("--output", default="data/dashboard.json")
+    parser.add_argument("--dataset", default="data/processed/us-brazil-tariff-exposure.csv.gz")
+    parser.add_argument("--manifest", default="data/processed/dataset-manifest.json")
     args = parser.parse_args()
     imports_path = Path(args.imports)
     df = enrich_with_yale(normalize_imports(imports_path), Path(args.yale) if args.yale else None)
@@ -346,6 +391,7 @@ def main() -> None:
     drivers_by_level = product_drivers(df, annotations=annotations, nomenclature=nomenclature)
     drivers = drivers_by_level["4"]
     yale_meta = load_json(Path("data/raw/yale_release.json"), {"status": "seeded from audited local analysis"})
+    export_public_dataset(df, Path(args.dataset), Path(args.manifest), imports_path, yale_meta)
     payload = {
         "meta": {
             "generated_at": datetime.now(timezone.utc).isoformat(),
