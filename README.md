@@ -45,3 +45,9 @@ See [the API and methodology guide](docs/API_E_METODO.md) for endpoint parameter
 
 Census calculated duties are observed monthly customs statistics. Yale rates are modeled statutory rates. They answer different questions and are intentionally displayed as separate measures.
 
+## License and data terms
+
+Original source code and documentation in this repository are released under the [MIT License](LICENSE). Third-party data and classifications remain subject to their respective source terms and revisions; the repository license does not relicense them.
+
+Each refresh records Census cutoff, Yale release, join coverage and integrity checks in `data/audit.json`. Methodological changes follow the documented review, release and rollback workflow.
+

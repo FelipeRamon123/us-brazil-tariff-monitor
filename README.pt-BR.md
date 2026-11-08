@@ -78,3 +78,9 @@ Veja [docs/API_E_METODO.md](docs/API_E_METODO.md) para os trechos reutilizáveis
 
 Uma alta antes de uma tarifa ou uma queda posterior é evidência descritiva compatível com antecipação ou impacto, mas não demonstra causalidade sozinha. A composição mensal pode ser dominada por petróleo, aeronaves ou operações extraordinárias. O dashboard mantém esse cuidado no texto de cada produto.
 
+## Licença e condições de uso
+
+O código-fonte e a documentação produzidos neste repositório são disponibilizados sob a [licença MIT](LICENSE). Dados e classificações de terceiros permanecem sujeitos aos termos, revisões e condições das respectivas fontes; a licença do repositório não os relicencia.
+
+A proveniência técnica de cada atualização - competência do Census, release do Yale, cobertura do cruzamento e verificações de integridade - é registrada em `data/audit.json`. Mudanças metodológicas seguem o fluxo documentado de revisão, release e rollback.
+
