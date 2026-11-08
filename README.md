@@ -8,6 +8,16 @@ This repository is a **showcase**. The user-facing application and processed dat
 
 **[Open the public dashboard preview →](https://us-brazil-tariff-monitor.feliperamondbr.chatgpt.site)**
 
+## Reusable code and data
+
+- [Monthly Census query in Power Query M](https://github.com/FelipeRamon123/official-data-api-toolkit/blob/main/sources/us-census/power-query/07_monthly_imports_by_country_htsus10.m)
+- [Monthly Census query in Python](https://github.com/FelipeRamon123/official-data-api-toolkit/blob/main/sources/us-census/python/07_monthly_imports_by_country_htsus10.py)
+- [Monthly Census + Yale join in Python](https://github.com/FelipeRamon123/official-data-api-toolkit/blob/main/sources/yale-tariff-rate-tracker/python/03_build_monthly_tariff_exposure.py)
+- [Official Portuguese nomenclature connector](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/receita-ncm)
+- [Latest analytical dataset](https://github.com/FelipeRamon123/us-brazil-tariff-monitor/releases/latest/download/us-brazil-tariff-exposure.csv.gz) and [machine-readable manifest](https://github.com/FelipeRamon123/us-brazil-tariff-monitor/releases/latest/download/dataset-manifest.json)
+
+See [docs/DATASET.md](docs/DATASET.md) for the field dictionary.
+
 ## Highlights
 
 - Monthly consumption imports since January 2025 at HTS10 detail.

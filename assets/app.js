@@ -13,6 +13,7 @@ const esc=s=>String(s??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const billion=v=>(v/1e9).toFixed(1).replace(".",",");
 
 async function init(){
+  configureResourceLinks();
   const response=await fetch("data/dashboard.json");
   if(!response.ok)throw new Error(`Falha ao carregar dados: ${response.status}`);
   state.data=await response.json();state.period=state.data.meta.latest_period;
@@ -20,6 +21,15 @@ async function init(){
   state.visibleMeasures=new Set(state.data.milestones.map((_,i)=>i));
   renderSeriesPeriod();renderAuthorities();renderMeasureLegend();renderExposure();renderPolicyRail();renderSelected();bind();
   requestAnimationFrame(validateVisualMarks);
+}
+
+function configureResourceLinks(){
+  const cfg=window.SITE_CONFIG||{},owner=String(cfg.githubOwner||"").trim();
+  if(!owner)return;
+  const branch=cfg.branch||"main",toolkit=`https://github.com/${owner}/${cfg.toolkitRepo||"official-data-api-toolkit"}`;
+  const showcase=`https://github.com/${owner}/${cfg.showcaseRepo||"us-brazil-tariff-monitor"}`;
+  const links={repoLink:toolkit,powerQueryLink:`${toolkit}/blob/${branch}/${cfg.powerQueryPath}`,pythonLink:`${toolkit}/blob/${branch}/${cfg.pythonPath}`,datasetLink:`${showcase}/releases/latest/download/${cfg.datasetAsset}`};
+  Object.entries(links).forEach(([id,url])=>{const link=document.getElementById(id);if(link){link.href=url;link.target="_blank";link.rel="noreferrer";}});
 }
 
 function renderSeriesPeriod(){

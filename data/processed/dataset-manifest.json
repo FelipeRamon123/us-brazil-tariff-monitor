@@ -1,0 +1,26 @@
+{
+  "dataset": "us-brazil-tariff-exposure.csv.gz",
+  "granularity": "month × country × HTSUS10",
+  "country_code": "3510",
+  "first_period": "2025-01",
+  "latest_period": "2026-09",
+  "rows": 54593,
+  "unique_htsus10": 7389,
+  "generated_at": "2026-11-08T17:29:40.236388+00:00",
+  "census": {
+    "endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
+    "sha256": "ae358b79244b3bbd595083b38c902f806035d42b68608cea235f76f9ac76b2d4"
+  },
+  "yale": {
+    "repository": "https://github.com/Budget-Lab-Yale/tariff-rate-tracker",
+    "tag": "v1.2",
+    "published_at": "2026-07-24T15:03:16Z",
+    "asset": "tariff-rate-tracker_2026-07-24-09.zip",
+    "asset_url": "https://github.com/Budget-Lab-Yale/tariff-rate-tracker/releases/download/v1.2/tariff-rate-tracker_2026-07-24-09.zip",
+    "asset_size": 659288828,
+    "release_url": "https://github.com/Budget-Lab-Yale/tariff-rate-tracker/releases/tag/v1.2"
+  },
+  "rate_method": "total_additional weighted by calendar days in force within each month; end-of-month rate reported separately",
+  "value_basis": "U.S. imports for consumption (CON_VAL_MO)",
+  "license_note": "Repository code is MIT licensed; source data remain subject to their original terms."
+}

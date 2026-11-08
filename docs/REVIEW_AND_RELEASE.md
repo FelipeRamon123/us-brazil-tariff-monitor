@@ -22,9 +22,10 @@ Pull Requests do not download external source archives and do not update tracked
 After approval:
 
 1. merge the Pull Request into `main`;
-2. tag the approved commit as `vMAJOR.MINOR.PATCH`;
-3. deploy the tagged source;
-4. record Census cutoff, Yale release and dashboard generation timestamp in the release notes.
+2. the workflow publishes or updates the monthly data release `data-AAAA-MM`, with stable assets `us-brazil-tariff-exposure.csv.gz` and `dataset-manifest.json`;
+3. tag application changes separately as `vMAJOR.MINOR.PATCH` when a dashboard version is warranted;
+4. enable GitHub Pages only after the repository and interface are approved for public access;
+5. record Census cutoff, Yale release and dashboard generation timestamp in the release notes.
 
 ## Rollback
 
