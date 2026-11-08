@@ -96,16 +96,23 @@
       <div class="section-head">
         <div><p class="section-index">03 / DECOMPOSIÇÃO</p><h2>Quem explica a mudança em <span id="driverPeriod">—</span>?</h2></div>
         <div class="driver-controls">
-          <div class="segmented" role="group" aria-label="Direção"><button data-direction="up" class="active">Altas</button><button data-direction="down">Quedas</button></div>
           <button id="downloadCsv" class="quiet-button">Baixar CSV</button>
         </div>
       </div>
+      <div class="driver-toolbar">
+        <div><span>Agregação</span><div class="segmented" role="group" aria-label="Nível do produto"><button data-driver-level="2">SH2</button><button data-driver-level="4" class="active">SH4</button><button data-driver-level="6">SH6</button><button data-driver-level="8">HTS8</button><button data-driver-level="10">HTSUS10</button></div></div>
+        <div><span>Movimento</span><div class="segmented" role="group" aria-label="Direção"><button data-direction="up" class="active">Altas</button><button data-direction="down">Quedas</button></div></div>
+      </div>
+      <p class="driver-nomenclature-note">SH2, SH4 e SH6 usam a nomenclatura oficial em português. Em HTS8 e HTSUS10, o nome em português identifica o SH6 correspondente; o detalhamento oficial americano aparece no painel lateral.</p>
       <div class="drivers-layout">
-        <div id="driversList" class="drivers-list"></div>
+        <div class="drivers-table-wrap">
+          <div class="driver-table-head"><span>Produto</span><span>Variação mensal</span><span>Tarifa no mês</span><span>Medida e vigência</span></div>
+          <div id="driversList" class="drivers-list"></div>
+        </div>
         <aside id="driverDetail" class="driver-detail">
           <p class="section-index">LEITURA DO PRODUTO</p>
-          <h3>Selecione uma barra</h3>
-          <p>O valor mostra a contribuição do grupo HTS4. A nota tarifária, quando disponível, foi calculada a partir da composição HTS10 do grupo.</p>
+          <h3>Selecione um produto</h3>
+          <p>A tarifa e as medidas são calculadas a partir das linhas HTS10 que compõem o código no mês selecionado.</p>
         </aside>
       </div>
     </section>

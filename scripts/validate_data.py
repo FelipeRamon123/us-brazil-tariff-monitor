@@ -8,6 +8,11 @@ assert periods[0] == "2025-01"
 assert all(row["imports_usd"] >= 0 for row in data["monthly"])
 assert data["audit"]["duplicate_period_hts10"] == 0
 assert set(data["drivers"]).issubset(set(periods))
+assert set(data["drivers_by_level"]) == {"2", "4", "6", "8", "10"}
+for level, windows in data["drivers_by_level"].items():
+    assert set(windows).issubset(set(periods))
+    assert all(len(row["code"]) == int(level) for rows in windows.values() for row in rows)
+    assert all(row["product_pt"] for rows in windows.values() for row in rows)
 assert len(data["milestones"]) >= 10
 if data["meta"].get("yale_product_join"):
     assert len(data["tariff_bands"]) == len(periods)

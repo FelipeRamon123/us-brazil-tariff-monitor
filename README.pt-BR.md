@@ -12,8 +12,10 @@ Este repositório é uma **showcase**: a aplicação e os dados processados fica
 
 - série mensal de importações para consumo no nível HTS10, a partir de janeiro de 2025;
 - gráfico interativo principal com modos de composição relativa e valor absoluto, seleção de faixas e exibição opcional dos marcos tarifários e valores mensais;
-- clique no mês para ver as maiores altas e quedas por HTS4;
-- área empilhada em 100% da pauta por sete faixas de tarifa adicional, com média ponderada, cobertura do cruzamento e migração mensal entre faixas;
+- clique no mês para ver as maiores altas e quedas por SH2, SH4, SH6, HTS8 ou HTSUS10;
+- nomes oficiais em português para SH2/SH4/SH6 e contexto SH6 em português para os desdobramentos americanos HTS8/HTSUS10;
+- tarifa adicional média no mês, medida aplicável e início de vigência diretamente na tabela de produtos;
+- área empilhada em 100% da pauta por seis faixas de tarifa adicional, com média ponderada, cobertura do cruzamento e migração mensal entre faixas;
 - valor antes/depois, variação absoluta, percentual e contribuição para o movimento do mês;
 - taxa estatutária adicional média e parcela exposta quando o painel HTS10 do Yale está disponível;
 - controles internos de qualidade, hashes e versões das fontes preservados nos arquivos de dados e nos testes, sem exposição na interface de portfólio;
@@ -31,6 +33,10 @@ Este repositório é uma **showcase**: a aplicação e os dados processados fica
    Repositório: <https://github.com/Budget-Lab-Yale/tariff-rate-tracker>  
    O workflow registra tag, data e URL exatas da release. Taxas são estatutárias modeladas, não direitos efetivamente recolhidos.
    Código reutilizável proposto: [módulo Yale do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/review/yale-tariff-tracker-module/sources/yale-tariff-rate-tracker).
+
+3. **Receita Federal — Sistema Classif / NCM**
+   JSON oficial: `https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json`
+   O workflow atualiza as descrições em português de SH2, SH4 e SH6. HTS8 e HTSUS10 são desdobramentos próprios dos EUA: nesses níveis, o painel mostra o contexto oficial SH6 em português e conserva o detalhe HTSUS americano como referência.
 
 ## Revisão antes da publicação
 

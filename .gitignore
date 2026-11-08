@@ -8,4 +8,6 @@ data/work/
 *.parquet
 dist/
 site-package.tar.gz
+.qa-chrome*/
+preview-*.png
 

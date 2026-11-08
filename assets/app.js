@@ -1,11 +1,12 @@
 const state={
-  data:null,period:null,direction:"up",authority:"Todos",driver:null,
+  data:null,period:null,direction:"up",authority:"Todos",driver:null,driverLevel:"4",
   exposureMode:"share",visibleBands:new Set(),visibleMeasures:new Set(),showPolicyMarkers:true,showValueLabels:true,
 };
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 const bandColors={free:"#d8d4c8",low:"#aebaa5",medium:"#6e9280",standard:"#2f6859",high:"#a66a4d",very_high:"#7b2f19",unmatched:"#ece6da"};
 const money=v=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:1}).format(v||0);
 const pct=v=>v==null?"—":new Intl.NumberFormat("pt-BR",{style:"percent",maximumFractionDigits:1,signDisplay:"exceptZero"}).format(v);
+const ratePct=v=>v==null?"—":new Intl.NumberFormat("pt-BR",{style:"percent",maximumFractionDigits:1}).format(v);
 const monthLabel=p=>new Intl.DateTimeFormat("pt-BR",{month:"short",year:"numeric"}).format(new Date(`${p}-15T12:00:00`)).replace(". de ","/");
 const dateLabel=d=>new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(`${d}T12:00:00`));
 const esc=s=>String(s??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -174,25 +175,36 @@ function showPolicy(i){
 }
 
 function currentDrivers(){
-  const rows=state.data.drivers[state.period]||[];
+  const rows=state.data.drivers_by_level?.[state.driverLevel]?.[state.period]||state.data.drivers[state.period]||[];
   return rows.filter(r=>state.direction==="up"?r.change_usd>0:r.change_usd<0).sort((a,b)=>state.direction==="up"?b.change_usd-a.change_usd:a.change_usd-b.change_usd).slice(0,10);
+}
+function driverLevelLabel(){return Number(state.driverLevel)<=6?`SH${state.driverLevel}`:(state.driverLevel==="10"?"HTSUS10":`HTS${state.driverLevel}`)}
+function componentSummary(r){
+  if(Number(r.after_usd)===0)return`<span class="measure-none">Sem fluxo no mês</span>`;
+  const components=r.tariff_components||[];if(!components.length)return`<span class="measure-none">Sem tarifa adicional</span>`;
+  return components.map(c=>`<span class="measure-line"><b>${esc(c.label)}</b>${c.since?`<small>desde ${dateLabel(c.since)}</small>`:""}</span>`).join("");
 }
 function renderDrivers(){
   const rows=currentDrivers(),max=Math.max(1,...rows.map(r=>Math.abs(r.change_usd)));
-  $("#driversList").innerHTML=rows.map(r=>`<div class="driver-row ${state.direction==="down"?"down":""} ${state.driver===r.hs4?"active":""}" data-hs4="${r.hs4}" tabindex="0"><span class="driver-code">${r.hs4}</span><span class="driver-name">${esc(r.product_pt||r.description||"Produto")}</span><span class="bar-track"><i class="bar-fill" data-chart-mark data-value="${Math.abs(r.change_usd)}" style="width:${Math.max(1.5,Math.abs(r.change_usd)/max*100)}%"></i></span><strong class="driver-value">${money(r.change_usd)}</strong></div>`).join("")||`<p>Não há comparação anterior para este mês.</p>`;
-  $$(".driver-row").forEach(el=>{el.onclick=()=>showDriver(el.dataset.hs4);el.onkeydown=e=>{if(e.key==="Enter")showDriver(el.dataset.hs4)}});if(!state.driver&&rows[0])showDriver(rows[0].hs4);
+  $("#driversList").innerHTML=rows.map(r=>{
+    const code=r.code||r.hs4,endRate=r.tariff_rate_eom;
+    const endNote=endRate!=null&&Math.abs(endRate-(r.tariff_rate||0))>.0005?`<small>${ratePct(endRate)} no fim do mês</small>`:`<small>média ponderada</small>`;
+    return`<div class="driver-row ${state.direction==="down"?"down":""} ${state.driver===code?"active":""}" data-code="${esc(code)}" tabindex="0"><div class="driver-product"><span class="driver-code">${esc(code)}</span><span class="driver-name">${esc(r.product_pt||r.description_en||"Produto")}</span></div><div class="driver-change"><strong class="driver-value">${money(r.change_usd)}</strong><span class="bar-track"><i class="bar-fill" data-chart-mark data-value="${Math.abs(r.change_usd)}" style="width:${Math.max(1.5,Math.abs(r.change_usd)/max*100)}%"></i></span></div><div class="driver-tariff"><strong>${ratePct(r.tariff_rate)}</strong>${endNote}</div><div class="driver-measure">${componentSummary(r)}</div></div>`;
+  }).join("")||`<p>Não há comparação anterior para este mês.</p>`;
+  $$(".driver-row").forEach(el=>{el.onclick=()=>showDriver(el.dataset.code);el.onkeydown=e=>{if(e.key==="Enter")showDriver(el.dataset.code)}});if(!state.driver&&rows[0])showDriver(rows[0].code||rows[0].hs4);
   requestAnimationFrame(validateVisualMarks);
 }
-function showDriver(hs4){
-  state.driver=hs4;const r=currentDrivers().find(x=>x.hs4===hs4);if(!r)return;
-  $$(".driver-row").forEach(el=>el.classList.toggle("active",el.dataset.hs4===hs4));const tariff=r.tariff_regime||"Tratamento HTS10 ainda não anexado a esta janela";
-  $("#driverDetail").innerHTML=`<p class="section-index">HTS4 ${r.hs4}</p><h3>${esc(r.product_pt||r.description||"Produto")}</h3>${r.tariff_rate!=null?`<span class="tariff-flag">TAXA ADICIONAL MÉDIA ${pct(r.tariff_rate)}</span>`:""}<p>${esc(r.editorial_reading||"A variação é descritiva. Verifique o HTS10 líder e o regime vigente antes de atribuí-la à tarifa.")}</p><dl><div><dt>Variação mensal</dt><dd>${money(r.change_usd)} · ${pct(r.change_pct)}</dd></div><div><dt>Antes → depois</dt><dd>${money(r.before_usd)} → ${money(r.after_usd)}</dd></div><div><dt>Regime dominante</dt><dd>${esc(tariff)}</dd></div><div><dt>Valor exposto</dt><dd>${r.tariff_exposure!=null?pct(r.tariff_exposure):"a verificar"}</dd></div><div><dt>HTS10 líder</dt><dd>${esc(r.leader_hts10||"—")}</dd></div></dl>`;
+function showDriver(code){
+  state.driver=code;const r=currentDrivers().find(x=>(x.code||x.hs4)===code);if(!r)return;
+  $$(".driver-row").forEach(el=>el.classList.toggle("active",el.dataset.code===code));
+  const range=r.tariff_rate_min!=null&&r.tariff_rate_max!=null&&Math.abs(r.tariff_rate_max-r.tariff_rate_min)>.0005?`${ratePct(r.tariff_rate_min)} a ${ratePct(r.tariff_rate_max)}`:ratePct(r.tariff_rate_eom);
+  $("#driverDetail").innerHTML=`<p class="section-index">${driverLevelLabel()} ${esc(code)}</p><h3>${esc(r.product_pt||r.description_en||"Produto")}</h3><span class="tariff-flag">TARIFA ADICIONAL MÉDIA ${ratePct(r.tariff_rate)}</span><div class="driver-component-list">${componentSummary(r)}</div><p>${esc(r.editorial_reading||"A variação é descritiva e deve ser lida com a composição do código, quantidades e sazonalidade.")}</p><dl><div><dt>Variação mensal</dt><dd>${money(r.change_usd)} · ${pct(r.change_pct)}</dd></div><div><dt>Antes → depois</dt><dd>${money(r.before_usd)} → ${money(r.after_usd)}</dd></div><div><dt>Faixa no fim do mês</dt><dd>${range}</dd></div><div><dt>Valor exposto</dt><dd>${r.tariff_exposure!=null?ratePct(r.tariff_exposure):"a verificar"}</dd></div><div><dt>HTS10 líder</dt><dd>${esc(r.leader_hts10||"—")}</dd></div>${Number(state.driverLevel)>6&&r.description_en?`<div><dt>Detalhe oficial HTSUS</dt><dd lang="en">${esc(r.description_en)}</dd></div>`:""}</dl>`;
 }
 
 function downloadCsv(){
-  const rows=currentDrivers(),cols=["period","direction","hs4","product","before_usd","after_usd","change_usd","change_pct","tariff_rate","tariff_regime","leader_hts10"];
-  const lines=[cols.join(","),...rows.map(r=>[state.period,state.direction,r.hs4,r.product_pt||r.description,r.before_usd,r.after_usd,r.change_usd,r.change_pct,r.tariff_rate??"",r.tariff_regime||"",r.leader_hts10||""].map(v=>`"${String(v).replaceAll('"','""')}"`).join(","))];
-  const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`drivers_${state.period}_${state.direction}.csv`;a.click();URL.revokeObjectURL(a.href);
+  const rows=currentDrivers(),cols=["period","direction","level","code","product_pt","before_usd","after_usd","change_usd","change_pct","tariff_rate_month","tariff_rate_eom","tariff_measure","tariff_since","leader_hts10","description_en"];
+  const lines=[cols.join(","),...rows.map(r=>[state.period,state.direction,state.driverLevel,r.code||r.hs4,r.product_pt||"",r.before_usd,r.after_usd,r.change_usd,r.change_pct,r.tariff_rate??"",r.tariff_rate_eom??"",r.tariff_measure||"",r.tariff_since||"",r.leader_hts10||"",r.description_en||""].map(v=>`"${String(v).replaceAll('"','""')}"`).join(","))];
+  const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`drivers_${state.period}_${state.driverLevel}_${state.direction}.csv`;a.click();URL.revokeObjectURL(a.href);
 }
 
 function validateVisualMarks(){
@@ -209,6 +221,7 @@ function validateVisualMarks(){
 
 function bind(){
   $$("[data-direction]").forEach(b=>b.onclick=()=>{state.direction=b.dataset.direction;state.driver=null;$$("[data-direction]").forEach(x=>x.classList.toggle("active",x===b));renderDrivers()});
+  $$("[data-driver-level]").forEach(b=>b.onclick=()=>{state.driverLevel=b.dataset.driverLevel;state.driver=null;$$("[data-driver-level]").forEach(x=>x.classList.toggle("active",x===b));renderDrivers()});
   $$('[data-exposure-mode]').forEach(b=>b.onclick=()=>{state.exposureMode=b.dataset.exposureMode;$$('[data-exposure-mode]').forEach(x=>x.classList.toggle("active",x===b));renderExposureChart()});
   $("#togglePolicyMarkers").onchange=e=>{state.showPolicyMarkers=e.target.checked;renderMeasureLegend();renderExposureChart()};
   $("#toggleValueLabels").onchange=e=>{state.showValueLabels=e.target.checked;renderExposureChart()};

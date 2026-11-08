@@ -14,6 +14,10 @@ def test_portfolio_interface_contract():
     assert 'id="hideAllMeasures"' in html
     assert "Dutiable value" in html
     assert "04 / COMO LER" not in html
+    assert 'data-driver-level="2"' in html
+    assert 'data-driver-level="10"' in html
+    assert "Tarifa no mês" in html
+    assert "Medida e vigência" in html
 
 
 def test_mobile_driver_bars_remain_visible():
@@ -28,3 +32,5 @@ def test_visual_mark_diagnostic_is_wired():
     assert "data-chart-mark" in javascript
     assert "visibleMeasures" in javascript
     assert "exposure-event-line" in javascript
+    assert "drivers_by_level" in javascript
+    assert "tariff_components" in javascript
