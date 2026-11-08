@@ -1,12 +1,12 @@
 # Tarifas dos EUA na pauta exportadora brasileira
 
-[English](README.md) · Dashboard GitHub Pages pronto para publicação
+[English](README.md) · Dashboard publicado no GitHub Pages
 
 Monitor mensal das importações dos Estados Unidos provenientes do Brasil, com decomposição dos produtos que explicam cada alta ou queda e uma faixa cronológica das medidas tarifárias modeladas pelo **Tariff Rate Tracker**, do The Budget Lab at Yale.
 
 Este repositório é uma **showcase**: a aplicação e os dados processados ficam aqui, enquanto os conectores reutilizáveis e exemplos de acesso às fontes pertencem ao [Official Data API Toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit).
 
-**[Abrir o preview público do dashboard →](https://us-brazil-tariff-monitor.feliperamondbr.chatgpt.site)**
+**[Abrir o dashboard →](https://feliperamon123.github.io/us-brazil-tariff-monitor/)**
 
 ## Código e dados reutilizáveis
 

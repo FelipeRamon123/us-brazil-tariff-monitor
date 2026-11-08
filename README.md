@@ -6,7 +6,7 @@ A reproducible GitHub Pages dashboard combining monthly U.S. imports from Brazil
 
 This repository is a **showcase**. The user-facing application and processed data live here; reusable source connectors and access examples belong in the [Official Data API Toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit).
 
-**[Open the public dashboard preview →](https://us-brazil-tariff-monitor.feliperamondbr.chatgpt.site)**
+**[Open the live dashboard →](https://feliperamon123.github.io/us-brazil-tariff-monitor/)**
 
 ## Reusable code and data
 
