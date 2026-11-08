@@ -21,6 +21,7 @@ See [docs/DATASET.md](docs/DATASET.md) for the field dictionary.
 ## Highlights
 
 - Monthly consumption imports since January 2025 at HTS10 detail.
+- Fully bilingual Portuguese/English interface, including charts, controls, policy milestones, product analysis, dates and value formatting.
 - Main interactive chart with relative-composition and absolute-value modes, selectable tariff bands, optional policy markers and monthly value labels.
 - Click any month to inspect the HS4 products driving the month-on-month change.
 - 100% stacked tariff-exposure view with seven rate bands, trade-weighted average rate and month-to-month band migration.
@@ -34,7 +35,7 @@ See [docs/DATASET.md](docs/DATASET.md) for the field dictionary.
 3. Set **Settings → Pages → Source** to **GitHub Actions**.
 4. Run **Update data and deploy Pages** once manually.
 
-Reusable connectors: [U.S. Census module](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/us-census) · [proposed Yale module](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/review/yale-tariff-tracker-module/sources/yale-tariff-rate-tracker)
+Reusable connectors: [U.S. Census module](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/us-census) · [Yale Tariff Rate Tracker module](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/yale-tariff-rate-tracker)
 
 ## Review and release
 

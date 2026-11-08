@@ -46,3 +46,12 @@ def test_visual_mark_diagnostic_is_wired():
     assert "exposure-event-line" in javascript
     assert "drivers_by_level" in javascript
     assert "tariff_components" in javascript
+
+
+def test_language_toggle_is_functional():
+    javascript = Path("assets/app.js").read_text(encoding="utf-8")
+    assert "function setLanguage" in javascript
+    assert 'localStorage.setItem("tariffMonitorLang"' in javascript
+    assert "POLICY_EN" in javascript
+    assert "GLOSSARY" in javascript
+    assert 'alert("A documentação completa em inglês' not in javascript
