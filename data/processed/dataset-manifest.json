@@ -6,7 +6,7 @@
   "latest_period": "2026-09",
   "rows": 54593,
   "unique_htsus10": 7389,
-  "generated_at": "2026-11-08T17:29:40.236388+00:00",
+  "generated_at": "2026-11-08T23:00:18.713714+00:00",
   "census": {
     "endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
     "sha256": "ae358b79244b3bbd595083b38c902f806035d42b68608cea235f76f9ac76b2d4"
@@ -20,7 +20,8 @@
     "asset_size": 659288828,
     "release_url": "https://github.com/Budget-Lab-Yale/tariff-rate-tracker/releases/tag/v1.2"
   },
-  "rate_method": "total_additional weighted by calendar days in force within each month; end-of-month rate reported separately",
+  "primary_rate_method": "total_additional in force on calendar day 15 of each month; measures beginning after that date enter in the following month",
+  "auxiliary_rate_method": "additional_rate_day_weighted weights total_additional by calendar days in force within the month; it does not determine dashboard bands",
   "value_basis": "U.S. imports for consumption (CON_VAL_MO)",
   "license_note": "Repository code is MIT licensed; source data remain subject to their original terms."
 }

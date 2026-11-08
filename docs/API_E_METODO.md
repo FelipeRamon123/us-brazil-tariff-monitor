@@ -31,17 +31,22 @@ Campos esperados:
 - `total_additional`, `total_rate`, `base_rate`;
 - colunas por autoridade, quando presentes.
 
-## 3. Regra temporal correta
+## 3. Regra temporal principal
 
-O Census é mensal e o Yale é diário/intervalar. Para cada `mês × HTS10`:
+O Census é mensal e o Yale é diário/intervalar. Para cada `mês × HTS10`, a classificação principal adota uma data de referência fixa:
 
-1. selecionam-se os intervalos do Yale que intersectam o mês;
-2. calcula-se o número de dias de interseção;
-3. `total_additional` é ponderada pelos dias de vigência;
-4. a taxa do último dia do mês é preservada em `yale_rate_eom`;
-5. a média do grupo HTS4 é ponderada pelo valor importado daquele mês.
+1. define-se o dia 15 como referência mensal;
+2. seleciona-se o intervalo Yale vigente nessa data para cada HTS10;
+3. `total_additional` desse intervalo vira `additional_rate_effective` e determina a faixa do dashboard;
+4. uma medida iniciada até o dia 15 entra no próprio mês; depois do dia 15, entra no mês seguinte;
+5. `additional_rate_day_weighted` preserva, apenas como auxiliar, a média ponderada pelos dias de vigência;
+6. `additional_rate_eom` preserva a taxa do último dia do mês para conferência.
 
-Assim, uma medida vigente desde 18 de agosto não é aplicada retroativamente aos primeiros 17 dias. Como a base mensal não informa o dia de desembaraço de cada entrada, a média por dias é uma medida de **exposição estatutária mensal**, não uma estimativa dos direitos efetivamente pagos.
+Nos níveis agregados SH2/SH4/SH6/HTS8, a tabela mostra como principal a faixa discreta com maior valor importado entre os HTSUS10 do código. Médias pela composição permanecem auxiliares no CSV exportado.
+
+O termo **sobretarifa potencial** designa somente as taxas adicionais modeladas pelo Yale. Não abrange a tarifa-base normal, antidumping, direitos compensatórios ou outras incidências fora do tracker.
+
+Assim, uma medida iniciada em 18 de agosto entra na classificação principal de setembro. A coluna auxiliar por dias permite análises alternativas, mas não representa os direitos efetivamente pagos nem participa da visualização principal.
 
 ## 4. Decomposição do movimento
 

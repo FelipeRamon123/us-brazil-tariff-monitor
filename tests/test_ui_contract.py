@@ -16,7 +16,7 @@ def test_portfolio_interface_contract():
     assert "04 / COMO LER" not in html
     assert 'data-driver-level="2"' in html
     assert 'data-driver-level="10"' in html
-    assert "Tarifa no mês" in html
+    assert "Sobretarifa no mês" in html
     assert "Medida e vigência" in html
     assert 'id="repoLink"' in html
     assert 'id="powerQueryLink"' in html
@@ -55,3 +55,12 @@ def test_language_toggle_is_functional():
     assert "POLICY_EN" in javascript
     assert "GLOSSARY" in javascript
     assert 'alert("A documentação completa em inglês' not in javascript
+
+
+def test_primary_metric_is_discrete_surcharge():
+    html = Path("index.html").read_text(encoding="utf-8")
+    javascript = Path("assets/app.js").read_text(encoding="utf-8")
+    assert "vigente no dia 15" in html
+    assert "Média auxiliar por dias" in html
+    assert "potentially_surcharged_pct" in javascript
+    assert "weighted_average_rate" not in javascript

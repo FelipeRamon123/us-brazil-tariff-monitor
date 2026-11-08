@@ -20,13 +20,15 @@ Granularidade: `mês × país × HTSUS10`
 
 | Campo | Definição |
 |---|---|
-| `additional_rate_month` | `total_additional` do Yale ponderada pelos dias de vigência dentro do mês |
+| `additional_rate_effective` | `total_additional` do Yale vigente no dia 15 da competência; é a métrica principal |
+| `additional_rate_day_weighted` | Média auxiliar de `total_additional` ponderada pelos dias de vigência; não determina as faixas do dashboard |
 | `additional_rate_eom` | Taxa adicional vigente no último dia do mês |
 | `tariff_band` | Faixa usada no dashboard |
-| `yale_valid_from` | Início do intervalo vigente no fim do mês |
-| `rate_*` | Componentes da taxa adicional por autoridade, no fim do mês |
+| `yale_reference_date` | Data de referência mensal, fixada no dia 15 |
+| `yale_valid_from` | Início do intervalo vigente na data de referência |
+| `rate_*` | Componentes da sobretarifa por autoridade na data de referência |
 | `rate_*_since` | Data desde a qual o componente vigente permanece no nível informado |
 
-Taxas são frações decimais: `0.25` corresponde a 25%. A taxa estatutária modelada e os direitos calculados observados são medidas distintas.
+Taxas são frações decimais: `0.25` corresponde a 25%. A sobretarifa estatutária modelada e os direitos calculados observados são medidas distintas. A sobretarifa não inclui tarifa-base, antidumping, compensatórias ou medidas fora do tracker.
 
 Cada release inclui também `dataset-manifest.json`, com data de corte, contagem de linhas, hash do insumo Census, release Yale e método de alinhamento temporal.

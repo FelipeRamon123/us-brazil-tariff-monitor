@@ -1,4 +1,4 @@
-# U.S. tariffs across Brazil's export basket
+# U.S. surcharges across Brazil's export basket
 
 [Português](README.pt-BR.md)
 
@@ -22,9 +22,9 @@ See [docs/DATASET.md](docs/DATASET.md) for the field dictionary.
 
 - Monthly consumption imports since January 2025 at HTS10 detail.
 - Fully bilingual Portuguese/English interface, including charts, controls, policy milestones, product analysis, dates and value formatting.
-- Main interactive chart with relative-composition and absolute-value modes, selectable tariff bands, optional policy markers and monthly value labels.
+- Main interactive chart with relative-composition and absolute-value modes, selectable potential-surcharge bands, optional policy markers and monthly value labels.
 - Click any month to inspect the HS4 products driving the month-on-month change.
-- 100% stacked tariff-exposure view with seven rate bands, trade-weighted average rate and month-to-month band migration.
+- 100% stacked potential-surcharge view based on the statutory rate in force on day 15 of each month, with month-to-month band migration.
 - Source cutoffs, release metadata, row counts, duplicates and checksums retained in internal data and tests rather than displayed in the portfolio interface.
 - Scheduled GitHub Actions refresh and GitHub Pages deployment.
 
@@ -54,7 +54,9 @@ See [the API and methodology guide](docs/API_E_METODO.md) for endpoint parameter
 
 ## Important distinction
 
-Census calculated duties are observed monthly customs statistics. Yale rates are modeled statutory rates. They answer different questions and are intentionally displayed as separate measures.
+Census calculated duties are observed monthly customs statistics. Yale rates are modeled statutory additional rates. The primary monthly classification uses the rate in force on day 15: changes through day 15 enter that month; later changes enter the following month. A day-weighted average remains available only as an auxiliary dataset field.
+
+“Potential surcharge” excludes the ordinary base tariff, antidumping and countervailing duties, and measures outside the tracker’s modeled scope.
 
 ## License and data terms
 

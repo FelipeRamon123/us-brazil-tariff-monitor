@@ -1,4 +1,4 @@
-# Tarifas dos EUA na pauta exportadora brasileira
+# Sobretarifas dos EUA na pauta exportadora brasileira
 
 [English](README.md) · Dashboard publicado no GitHub Pages
 
@@ -20,7 +20,7 @@ O dashboard segue o mesmo padrão de acesso do showcase Census: a interface apon
 
 O dicionário de campos está em [docs/DATASET.md](docs/DATASET.md).
 
-A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de importação para consumo, valor geral, valor dutiável, direitos calculados, quantidades, taxa adicional mensal ponderada pelos dias de vigência, taxa no fim do mês e componentes por autoridade.
+A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de importação para consumo, valor geral, valor dutiável, direitos calculados, quantidades, sobretarifa potencial efetiva, média auxiliar por dias, taxa no fim do mês e componentes por autoridade.
 
 ## O que o projeto entrega
 
@@ -29,10 +29,10 @@ A base publicada tem granularidade `mês × país × HTSUS10` e mantém valor de
 - gráfico interativo principal com modos de composição relativa e valor absoluto, seleção de faixas e exibição opcional dos marcos tarifários e valores mensais;
 - clique no mês para ver as maiores altas e quedas por SH2, SH4, SH6, HTS8 ou HTSUS10;
 - nomes oficiais em português para SH2/SH4/SH6 e contexto SH6 em português para os desdobramentos americanos HTS8/HTSUS10;
-- tarifa adicional média no mês, medida aplicável e início de vigência diretamente na tabela de produtos;
-- área empilhada em 100% da pauta por seis faixas de tarifa adicional, com média ponderada, cobertura do cruzamento e migração mensal entre faixas;
+- faixa de sobretarifa potencial predominante, medida aplicável e início de vigência diretamente na tabela de produtos;
+- área empilhada em 100% da pauta por seis faixas de sobretarifa potencial, com cobertura do cruzamento e migração mensal entre faixas;
 - valor antes/depois, variação absoluta, percentual e contribuição para o movimento do mês;
-- taxa estatutária adicional média e parcela exposta quando o painel HTS10 do Yale está disponível;
+- sobretarifa estatutária de referência e parcela exposta quando o painel HTS10 do Yale está disponível;
 - controles internos de qualidade, hashes e versões das fontes preservados nos arquivos de dados e nos testes, sem exposição na interface de portfólio;
 - atualização automática, release mensal de dados e publicação no GitHub Pages.
 
@@ -88,6 +88,12 @@ python scripts/validate_data.py
 ```
 
 Veja [docs/API_E_METODO.md](docs/API_E_METODO.md) para os trechos reutilizáveis e a definição exata do cruzamento temporal.
+
+### Regra mensal da sobretarifa
+
+A classificação principal usa a taxa adicional estatutária vigente no dia 15 de cada competência. Medidas iniciadas até o dia 15 entram no próprio mês; medidas posteriores entram no mês seguinte. A média ponderada pelos dias de vigência é mantida somente como coluna auxiliar e não determina as faixas, os KPIs ou a tabela de produtos.
+
+“Sobretarifa potencial” não inclui a tarifa-base normal, antidumping, medidas compensatórias ou incidências fora do escopo modelado pelo tracker.
 
 ## Limite interpretativo
 
