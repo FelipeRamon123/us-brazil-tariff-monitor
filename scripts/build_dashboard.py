@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from itertools import combinations
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -11,13 +12,40 @@ import pandas as pd
 
 TARIFF_BANDS = [
     ("free", "0%", -0.0000001, 0.0000001),
-    ("low", ">0–10%", 0.0000001, 0.1000001),
-    ("medium", ">10–15%", 0.1000001, 0.1500001),
-    ("standard", ">15–25%", 0.1500001, 0.2500001),
-    ("high", ">25–40%", 0.2500001, 0.4000001),
-    ("very_high", ">40–60%", 0.4000001, 0.6000001),
-    ("extreme", ">60%", 0.6000001, float("inf")),
+    ("low", ">0-10%", 0.0000001, 0.1000001),
+    ("medium", ">10-15%", 0.1000001, 0.1500001),
+    ("standard", ">15-25%", 0.1500001, 0.2500001),
+    ("high", ">25-40%", 0.2500001, 0.4000001),
+    ("very_high", ">40%", 0.4000001, float("inf")),
 ]
+
+TARIFF_COMPONENTS = {
+    "rate_232": "Seção 232",
+    "rate_s301br": "Seção 301 Brasil",
+    "rate_s301fl": "Seção 301 trabalho forçado",
+    "rate_ieepa_recip": "IEEPA recíproca",
+    "rate_ieepa_fent": "IEEPA fentanil",
+    "rate_s122": "Seção 122",
+    "rate_section_201": "Seção 201",
+    "rate_301": "Seção 301",
+    "rate_other": "Outras medidas",
+}
+
+DRIVER_LEVELS = (2, 4, 6, 8, 10)
+
+
+def applicable_components(candidates: list[dict], target_rate: float | None) -> list[dict]:
+    target = float(target_rate or 0)
+    if target <= 0 or not candidates:
+        return []
+    best: tuple[tuple[float, int, int], list[dict]] | None = None
+    for size in range(1, len(candidates) + 1):
+        for indexes in combinations(range(len(candidates)), size):
+            chosen = [candidates[index] for index in indexes]
+            score = (abs(sum(item["rate"] for item in chosen) - target), size, sum(indexes))
+            if best is None or score < best[0]:
+                best = (score, chosen)
+    return best[1] if best else []
 
 
 def tariff_band(rate) -> str | None:
@@ -27,7 +55,7 @@ def tariff_band(rate) -> str | None:
     for key, _label, lower, upper in TARIFF_BANDS:
         if lower < value <= upper or key == "free" and value <= upper:
             return key
-    return "extreme"
+    return "very_high"
 
 
 def sha256(path: Path) -> str:
@@ -52,7 +80,9 @@ def normalize_imports(path: Path) -> pd.DataFrame:
     df["hts10"] = df["hts10"].astype(str).str.zfill(10)
     for col in ["consumption_value_usd", "dutiable_value_usd", "calculated_duties_usd"]:
         df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
-    df["hs4"] = df["hts10"].str[:4]
+    for level in DRIVER_LEVELS:
+        df[f"code_{level}"] = df["hts10"].str[:level]
+    df["hs4"] = df["code_4"]
     return df
 
 
@@ -60,6 +90,10 @@ def enrich_with_yale(df: pd.DataFrame, path: Path | None) -> pd.DataFrame:
     df = df.copy()
     df["yale_rate_month"] = pd.NA
     df["yale_rate_eom"] = pd.NA
+    df["yale_valid_from"] = pd.NA
+    for component in TARIFF_COMPONENTS:
+        df[f"yale_{component}"] = pd.NA
+        df[f"yale_{component}_since"] = pd.NA
     if not path or not path.exists():
         return df
     rates = pd.read_csv(path, dtype={"hts10": str, "country": str, "cty_code": str})
@@ -69,7 +103,16 @@ def enrich_with_yale(df: pd.DataFrame, path: Path | None) -> pd.DataFrame:
     for column in ["valid_from", "valid_until"]:
         rates[column] = pd.to_datetime(rates[column], errors="coerce")
     rates["valid_until"] = rates["valid_until"].fillna(pd.Timestamp("2099-12-31"))
-    rates["total_additional"] = pd.to_numeric(rates["total_additional"], errors="coerce").fillna(0)
+    numeric_rates = ["total_additional", *TARIFF_COMPONENTS]
+    for column in numeric_rates:
+        if column not in rates:
+            rates[column] = 0
+        rates[column] = pd.to_numeric(rates[column], errors="coerce").fillna(0)
+    rates = rates.sort_values(["hts10", "valid_from", "valid_until"]).reset_index(drop=True)
+    for component in TARIFF_COMPONENTS:
+        changed = rates.groupby("hts10")[component].diff().fillna(float("inf")).ne(0)
+        since = rates["valid_from"].where(changed)
+        rates[f"{component}_since"] = since.groupby(rates["hts10"]).ffill()
     parts = []
     for period in sorted(df["period"].unique()):
         start = pd.Period(period).start_time.normalize()
@@ -81,14 +124,26 @@ def enrich_with_yale(df: pd.DataFrame, path: Path | None) -> pd.DataFrame:
         active["rate_days"] = active.total_additional * active.days
         monthly_sums = active.groupby("hts10", as_index=True).agg(rate_days=("rate_days", "sum"), days=("days", "sum"))
         monthly = monthly_sums.rate_days.div(monthly_sums.days).rename("yale_rate_month")
-        eom = active[(active.valid_from <= end) & (active.valid_until >= end)].drop_duplicates("hts10", keep="last").set_index("hts10")["total_additional"].rename("yale_rate_eom")
+        eom_columns = ["hts10", "total_additional", "valid_from"]
+        eom_columns += list(TARIFF_COMPONENTS)
+        eom_columns += [f"{component}_since" for component in TARIFF_COMPONENTS]
+        eom = active[(active.valid_from <= end) & (active.valid_until >= end)].sort_values(["hts10", "valid_from"]).drop_duplicates("hts10", keep="last")[eom_columns].set_index("hts10")
+        eom = eom.rename(columns={
+            "total_additional": "yale_rate_eom",
+            "valid_from": "yale_valid_from",
+            **{component: f"yale_{component}" for component in TARIFF_COMPONENTS},
+            **{f"{component}_since": f"yale_{component}_since" for component in TARIFF_COMPONENTS},
+        })
         joined = monthly.to_frame().join(eom, how="left").reset_index()
         joined["period"] = period
         parts.append(joined)
     if not parts:
         return df
     lookup = pd.concat(parts, ignore_index=True)
-    base = df.drop(columns=["yale_rate_month", "yale_rate_eom"])
+    yale_columns = ["yale_rate_month", "yale_rate_eom", "yale_valid_from"]
+    yale_columns += [f"yale_{component}" for component in TARIFF_COMPONENTS]
+    yale_columns += [f"yale_{component}_since" for component in TARIFF_COMPONENTS]
+    base = df.drop(columns=yale_columns, errors="ignore")
     return base.merge(lookup, on=["period", "hts10"], how="left")
 
 
@@ -145,42 +200,129 @@ def tariff_exposure(df: pd.DataFrame) -> tuple[list[dict], dict[str, list[dict]]
     return series, transitions
 
 
-def product_drivers(df: pd.DataFrame, top_n: int = 12, annotations: dict | None = None) -> dict[str, list[dict]]:
-    df = df.copy()
-    df["tariff_value"] = df["consumption_value_usd"] * pd.to_numeric(df["yale_rate_month"], errors="coerce").fillna(0)
-    df["exposed_value"] = df["consumption_value_usd"].where(pd.to_numeric(df["yale_rate_month"], errors="coerce").fillna(0) > 0, 0)
-    by = df.groupby(["period", "hs4"], as_index=False).agg(
-        value_usd=("consumption_value_usd", "sum"),
-        description=("hts10_description", "first"),
-        tariff_value=("tariff_value", "sum"),
-        exposed_value=("exposed_value", "sum"),
-    )
-    by["yale_rate"] = by.tariff_value.div(by.value_usd.replace(0, pd.NA))
-    by["yale_exposure"] = by.exposed_value.div(by.value_usd.replace(0, pd.NA))
-    periods = sorted(by["period"].unique())
-    result: dict[str, list[dict]] = {}
-    for before, after in zip(periods, periods[1:]):
-        a = by[by.period == before].set_index("hs4")
-        b = by[by.period == after].set_index("hs4")
-        joined = a[["value_usd"]].rename(columns={"value_usd": "before_usd"}).join(
-            b[["value_usd", "description", "yale_rate", "yale_exposure"]].rename(columns={"value_usd": "after_usd"}), how="outer"
-        ).fillna({"before_usd": 0, "after_usd": 0, "description": ""})
-        joined["change_usd"] = joined.after_usd - joined.before_usd
-        joined["change_pct"] = joined.change_usd.div(joined.before_usd.replace(0, pd.NA))
-        gross = joined.change_usd.abs().sum() or 1
-        joined["gross_contribution"] = joined.change_usd.abs() / gross
-        picks = pd.concat([joined.nlargest(top_n, "change_usd"), joined.nsmallest(top_n, "change_usd")]).drop_duplicates()
-        picks = picks.reset_index().sort_values("change_usd", ascending=False)
-        rows = json.loads(picks.round(6).to_json(orient="records"))
-        for row in rows:
-            if row.get("yale_rate") is not None and not pd.isna(row.get("yale_rate")):
-                row.setdefault("tariff_rate", row.pop("yale_rate"))
-                row.setdefault("tariff_exposure", row.pop("yale_exposure"))
-                row.setdefault("tariff_regime", "Taxa adicional média mensal modelada pelo Yale")
-            note = (annotations or {}).get(f"{after}|{row['hs4']}")
-            if note:
-                row.update(note)
-        result[after] = rows
+def product_drivers(
+    df: pd.DataFrame,
+    top_n: int = 12,
+    annotations: dict | None = None,
+    nomenclature: dict | None = None,
+) -> dict[str, dict[str, list[dict]]]:
+    base = df.copy()
+    value = base["consumption_value_usd"]
+    rate_month = pd.to_numeric(base["yale_rate_month"], errors="coerce").fillna(0)
+    rate_eom = pd.to_numeric(base["yale_rate_eom"], errors="coerce").fillna(0)
+    base["tariff_value_month"] = value * rate_month
+    base["tariff_value_eom"] = value * rate_eom
+    base["exposed_value"] = value.where(rate_month > 0, 0)
+    for component in TARIFF_COMPONENTS:
+        base[f"weighted_{component}"] = value * pd.to_numeric(base[f"yale_{component}"], errors="coerce").fillna(0)
+
+    pt = nomenclature or {}
+    result: dict[str, dict[str, list[dict]]] = {}
+    for level in DRIVER_LEVELS:
+        code_col = f"code_{level}"
+        sums = {
+            "consumption_value_usd": ("consumption_value_usd", "sum"),
+            "tariff_value_month": ("tariff_value_month", "sum"),
+            "tariff_value_eom": ("tariff_value_eom", "sum"),
+            "exposed_value": ("exposed_value", "sum"),
+        }
+        sums.update({f"weighted_{component}": (f"weighted_{component}", "sum") for component in TARIFF_COMPONENTS})
+        grouped = base.groupby(["period", code_col], as_index=False).agg(**sums).rename(columns={code_col: "code"})
+        grouped["tariff_rate"] = grouped.tariff_value_month.div(grouped.consumption_value_usd).fillna(0)
+        grouped["tariff_rate_eom"] = grouped.tariff_value_eom.div(grouped.consumption_value_usd).fillna(0)
+        grouped["tariff_exposure"] = grouped.exposed_value.div(grouped.consumption_value_usd).fillna(0)
+        for component in TARIFF_COMPONENTS:
+            grouped[f"avg_{component}"] = grouped[f"weighted_{component}"].div(grouped.consumption_value_usd).fillna(0)
+
+        positive = base[base.consumption_value_usd > 0].copy()
+        positive["code"] = positive[code_col]
+        positive["numeric_rate_eom"] = pd.to_numeric(positive["yale_rate_eom"], errors="coerce")
+        ranges = positive.groupby(["period", "code"], as_index=False).agg(
+            tariff_rate_min=("numeric_rate_eom", "min"), tariff_rate_max=("numeric_rate_eom", "max")
+        )
+        leaders = positive.sort_values("consumption_value_usd", ascending=False).drop_duplicates(["period", "code"])
+        leaders = leaders[["period", "code", "hts10", "hts10_description"]].rename(
+            columns={"hts10": "leader_hts10", "hts10_description": "description"}
+        )
+        grouped = grouped.merge(ranges, on=["period", "code"], how="left").merge(leaders, on=["period", "code"], how="left")
+
+        for component in TARIFF_COMPONENTS:
+            rate_col = f"yale_{component}"
+            since_col = f"yale_{component}_since"
+            active = base[pd.to_numeric(base[rate_col], errors="coerce").fillna(0) > 0].copy()
+            if active.empty:
+                grouped[f"since_{component}"] = pd.NA
+                continue
+            active["code"] = active[code_col]
+            active["component_weight"] = active["consumption_value_usd"] * pd.to_numeric(active[rate_col], errors="coerce").fillna(0)
+            since = active.groupby(["period", "code", since_col], dropna=True, as_index=False).component_weight.sum()
+            since = since.sort_values("component_weight", ascending=False).drop_duplicates(["period", "code"])
+            since = since[["period", "code", since_col]].rename(columns={since_col: f"since_{component}"})
+            grouped = grouped.merge(since, on=["period", "code"], how="left")
+
+        by_period: dict[str, list[dict]] = {}
+        periods = sorted(grouped.period.unique())
+        for before, after in zip(periods, periods[1:]):
+            a = grouped[grouped.period == before].set_index("code")
+            b = grouped[grouped.period == after].set_index("code")
+            before_columns = ["consumption_value_usd", "description", "leader_hts10"]
+            after_columns = [
+                "consumption_value_usd", "description", "leader_hts10", "tariff_rate", "tariff_rate_eom",
+                "tariff_exposure", "tariff_rate_min", "tariff_rate_max",
+                *[f"avg_{component}" for component in TARIFF_COMPONENTS],
+                *[f"since_{component}" for component in TARIFF_COMPONENTS],
+            ]
+            joined = a[before_columns].rename(columns={
+                "consumption_value_usd": "before_usd", "description": "description_before", "leader_hts10": "leader_before"
+            }).join(b[after_columns].rename(columns={
+                "consumption_value_usd": "after_usd", "description": "description_after", "leader_hts10": "leader_after"
+            }), how="outer")
+            joined["before_usd"] = joined.before_usd.fillna(0)
+            joined["after_usd"] = joined.after_usd.fillna(0)
+            joined["description"] = joined.description_after.fillna(joined.description_before).fillna("")
+            joined["leader_hts10"] = joined.leader_after.fillna(joined.leader_before).fillna("")
+            joined["change_usd"] = joined.after_usd - joined.before_usd
+            joined["change_pct"] = joined.change_usd.div(joined.before_usd.replace(0, pd.NA))
+            gross = joined.change_usd.abs().sum() or 1
+            joined["gross_contribution"] = joined.change_usd.abs() / gross
+            picks = pd.concat([joined.nlargest(top_n, "change_usd"), joined.nsmallest(top_n, "change_usd")]).drop_duplicates()
+            picks = picks.reset_index().sort_values("change_usd", ascending=False)
+            numeric_columns = picks.select_dtypes(include="number").columns
+            picks[numeric_columns] = picks[numeric_columns].round(10)
+            rows = json.loads(picks.to_json(orient="records", date_format="iso"))
+            for row in rows:
+                code = str(row["code"]).zfill(level)
+                pt_level = str(level if level <= 6 else 6)
+                pt_code = code[: int(pt_level)]
+                row["level"] = level
+                row["code"] = code
+                row["product_pt"] = pt.get(pt_level, {}).get(pt_code) or row.get("description") or code
+                row["description_en"] = row.pop("description", "")
+                component_candidates = []
+                for component, label in TARIFF_COMPONENTS.items():
+                    component_rate = row.pop(f"avg_{component}", None)
+                    since = row.pop(f"since_{component}", None)
+                    if component_rate is not None and component_rate > 0.000001:
+                        component_candidates.append({
+                            "key": component, "label": label, "rate": component_rate,
+                            "since": str(since)[:10] if since else None,
+                        })
+                    row.pop(f"weighted_{component}", None)
+                components = applicable_components(component_candidates, row.get("tariff_rate_eom"))
+                row["tariff_components"] = components
+                row["tariff_measure"] = " + ".join(item["label"] for item in components) if components else "Sem tarifa adicional modelada"
+                row["tariff_since"] = components[0]["since"] if components else None
+                row["tariff_regime"] = "Tarifa adicional média mensal ponderada pela composição do código"
+                for unused in ["description_before", "description_after", "leader_before", "leader_after"]:
+                    row.pop(unused, None)
+                if level == 4:
+                    row["hs4"] = code
+                    note = (annotations or {}).get(f"{after}|{code}")
+                    if note:
+                        row.update(note)
+                row["product_pt"] = pt.get(pt_level, {}).get(pt_code) or row.get("product_pt") or code
+            by_period[after] = rows
+        result[str(level)] = by_period
     return result
 
 
@@ -200,7 +342,9 @@ def main() -> None:
     monthly = monthly_series(df)
     tariff_bands, tariff_transitions = tariff_exposure(df)
     annotations = load_json(Path("data/driver_annotations.json"), {})
-    drivers = product_drivers(df, annotations=annotations)
+    nomenclature = load_json(Path("data/nomenclature_pt.json"), {})
+    drivers_by_level = product_drivers(df, annotations=annotations, nomenclature=nomenclature)
+    drivers = drivers_by_level["4"]
     yale_meta = load_json(Path("data/raw/yale_release.json"), {"status": "seeded from audited local analysis"})
     payload = {
         "meta": {
@@ -210,13 +354,15 @@ def main() -> None:
             "census_endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
             "yale": yale_meta,
             "yale_product_join": bool(pd.to_numeric(df["yale_rate_month"], errors="coerce").notna().any()),
-            "method": "Census consumption imports; adjacent-month HS4 decomposition; Yale rates calendar-day weighted within each month when the product panel is available.",
+            "method": "Census consumption imports; adjacent-month HS2/4/6/8/10 decomposition; Yale rates calendar-day weighted within each month when the product panel is available.",
+            "nomenclature_pt": nomenclature.get("meta", {}),
         },
         "monthly": monthly,
         "tariff_bands": tariff_bands,
         "tariff_band_definitions": [{"key": key, "label": label} for key, label, _lo, _hi in TARIFF_BANDS],
         "tariff_transitions": tariff_transitions,
         "drivers": drivers,
+        "drivers_by_level": drivers_by_level,
         "milestones": load_json(Path(args.milestones), []),
         "audit": {
             "source_rows": int(len(df)), "periods": int(df.period.nunique()),

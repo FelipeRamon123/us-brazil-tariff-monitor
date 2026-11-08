@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Monitor reproduzível das importações dos EUA provenientes do Brasil e das medidas tarifárias aplicáveis.">
-  <title>Brasil × tarifas dos EUA — monitor mensal</title>
+  <meta name="description" content="Evolução das tarifas dos Estados Unidos na pauta exportadora brasileira.">
+  <title>Tarifas dos EUA na pauta exportadora brasileira</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
@@ -13,53 +13,59 @@
 <body>
   <nav class="topbar">
     <a class="brand" href="#top"><span class="brand-mark">FR</span><span>Open trade intelligence</span></a>
-    <div class="nav-actions"><a href="#metodo">Método</a><a href="#auditoria">Auditoria</a><button id="langToggle" class="quiet-button">EN</button></div>
+    <div class="nav-actions"><a href="#exposicao">Evolução</a><a href="#produtos">Produtos</a><a href="#metodo">Método</a><button id="langToggle" class="quiet-button">EN</button></div>
   </nav>
 
   <header id="top" class="hero shell">
     <div class="hero-copy">
-      <p class="eyebrow">ESTADOS UNIDOS × BRASIL · HTS10</p>
-      <h1>Importações sob<br><em>novas tarifas</em></h1>
-      <p class="dek">Uma leitura mensal do comércio, dos marcos tarifários e dos produtos que explicam cada inflexão — com fonte, corte e cálculo expostos.</p>
+      <p class="eyebrow">BRASIL → ESTADOS UNIDOS · HTS10</p>
+      <h1>Tarifas dos EUA<br><em>na pauta brasileira</em></h1>
+      <p class="dek">A evolução mensal das exportações brasileiras aos Estados Unidos e de sua exposição potencial às novas medidas tarifárias.</p>
     </div>
     <aside class="hero-note">
       <span class="note-number">01</span>
-      <p>Selecione um mês no gráfico. O painel decompõe a variação contra o mês anterior e distingue movimento comercial de exposição tarifária.</p>
-      <div id="freshness" class="freshness"></div>
+      <p>Alterne entre participação relativa e valor em dólares. Selecione um mês para identificar os produtos que explicam a alta ou a queda do fluxo.</p>
+      <div id="seriesPeriod" class="series-period"></div>
     </aside>
   </header>
 
   <main class="shell">
     <section class="kpi-row" aria-label="Indicadores do mês selecionado">
       <article><span>Mês selecionado</span><strong id="kpiMonth">—</strong><small id="kpiCut">—</small></article>
-      <article><span>Importações para consumo</span><strong id="kpiImports">—</strong><small id="kpiMonthlyChange">—</small></article>
+      <article><span>Exportações brasileiras aos EUA</span><strong id="kpiImports">—</strong><small id="kpiMonthlyChange">—</small></article>
       <article><span>Direitos calculados</span><strong id="kpiDuties">—</strong><small id="kpiObservedRate">—</small></article>
       <article><span>Valor dutiável</span><strong id="kpiDutiable">—</strong><small id="kpiDutiableShare">—</small></article>
     </section>
 
-    <section class="chart-section">
-      <div class="section-head">
-        <div><p class="section-index">01 / EVOLUÇÃO</p><h2>O fluxo mensal e os momentos em que a regra mudou</h2></div>
-        <div class="legend"><span><i class="line-swatch"></i>importações</span><span><i class="dot-swatch"></i>marco tarifário</span></div>
-      </div>
-      <div class="chart-card">
-        <div id="mainChart" class="main-chart" role="img" aria-label="Evolução mensal das importações dos EUA provenientes do Brasil"></div>
-        <div id="chartTooltip" class="chart-tooltip" hidden></div>
-      </div>
-      <div class="chart-instruction"><span>CLIQUE EM UM PONTO</span><span>A curva é suavizada apenas visualmente; os círculos preservam os valores mensais.</span></div>
-    </section>
-
     <section class="exposure-section" id="exposicao">
       <div class="section-head">
-        <div><p class="section-index">02 / EXPOSIÇÃO POTENCIAL</p><h2>Quanto da pauta estava em cada faixa tarifária?</h2></div>
-        <p class="section-aside">A área soma 100% do valor importado em cada mês. As faixas usam a tarifa adicional estatutária média pelos dias de vigência.</p>
+        <div><p class="section-index">01 / EVOLUÇÃO E EXPOSIÇÃO</p><h2>Como a pauta se distribuiu entre as faixas tarifárias?</h2></div>
+        <p class="section-aside">As faixas usam a tarifa adicional estatutária média pelos dias de vigência. Clique no mês para abrir sua decomposição.</p>
       </div>
       <div id="exposureUnavailable" class="exposure-unavailable" hidden></div>
       <div id="exposureContent">
         <div class="exposure-kpis" id="exposureKpis"></div>
+        <div class="chart-toolbar" aria-label="Controles do gráfico">
+          <div class="segmented" role="group" aria-label="Modo da visualização">
+            <button data-exposure-mode="share" class="active">Composição 100%</button>
+            <button data-exposure-mode="absolute">Valor em US$</button>
+          </div>
+          <div class="chart-options">
+            <label><input id="togglePolicyMarkers" type="checkbox" checked> Marcos tarifários</label>
+            <label><input id="toggleValueLabels" type="checkbox" checked> Valores mensais</label>
+          </div>
+        </div>
+        <div class="measure-controls" aria-label="Selecionar medidas tarifárias exibidas no gráfico">
+          <div class="measure-controls-head">
+            <div><strong>Medidas no gráfico</strong><span>Ative ou oculte cada linha vertical.</span></div>
+            <div class="measure-actions"><button id="showAllMeasures" type="button">Todas</button><button id="hideAllMeasures" type="button">Nenhuma</button></div>
+          </div>
+          <div id="measureLegend" class="measure-legend"></div>
+        </div>
         <div class="exposure-chart-wrap">
           <div id="exposureChart" class="exposure-chart" role="img" aria-label="Participação mensal do valor importado por faixa de tarifa adicional"></div>
-          <div id="exposureLegend" class="exposure-legend"></div>
+          <div id="exposureTooltip" class="chart-tooltip" hidden></div>
+          <div id="exposureLegend" class="exposure-legend" aria-label="Selecionar faixas tarifárias"></div>
         </div>
         <div class="exposure-detail-grid">
           <article>
@@ -77,50 +83,55 @@
       <p class="method-footnote">“Potencialmente tarifado” indica exposição estatutária modelada no HTS10. Não equivale aos direitos efetivamente calculados pelo Census e não inclui incidências fora do escopo do tracker.</p>
     </section>
 
-    <section class="timeline-section">
+    <section class="timeline-section" id="medidas">
       <div class="section-head compact">
-        <div><p class="section-index">03 / POLÍTICA</p><h2>Faixa completa de medidas</h2></div>
+        <div><p class="section-index">02 / POLÍTICA</p><h2>Faixa completa de medidas</h2></div>
         <div class="authority-filter" id="authorityFilter" aria-label="Filtrar marcos por autoridade"></div>
       </div>
       <div id="policyRail" class="policy-rail"></div>
       <div id="policyDetail" class="policy-detail" aria-live="polite"></div>
     </section>
 
-    <section class="drivers-section">
+    <section class="drivers-section" id="produtos">
       <div class="section-head">
-        <div><p class="section-index">04 / DECOMPOSIÇÃO</p><h2>Quem explica a mudança em <span id="driverPeriod">—</span>?</h2></div>
+        <div><p class="section-index">03 / DECOMPOSIÇÃO</p><h2>Quem explica a mudança em <span id="driverPeriod">—</span>?</h2></div>
         <div class="driver-controls">
-          <div class="segmented" role="group" aria-label="Direção"><button data-direction="up" class="active">Altas</button><button data-direction="down">Quedas</button></div>
           <button id="downloadCsv" class="quiet-button">Baixar CSV</button>
         </div>
       </div>
+      <div class="driver-toolbar">
+        <div><span>Agregação</span><div class="segmented" role="group" aria-label="Nível do produto"><button data-driver-level="2">SH2</button><button data-driver-level="4" class="active">SH4</button><button data-driver-level="6">SH6</button><button data-driver-level="8">HTS8</button><button data-driver-level="10">HTSUS10</button></div></div>
+        <div><span>Movimento</span><div class="segmented" role="group" aria-label="Direção"><button data-direction="up" class="active">Altas</button><button data-direction="down">Quedas</button></div></div>
+      </div>
+      <p class="driver-nomenclature-note">SH2, SH4 e SH6 usam a nomenclatura oficial em português. Em HTS8 e HTSUS10, o nome em português identifica o SH6 correspondente; o detalhamento oficial americano aparece no painel lateral.</p>
       <div class="drivers-layout">
-        <div id="driversList" class="drivers-list"></div>
+        <div class="drivers-table-wrap">
+          <div class="driver-table-head"><span>Produto</span><span>Variação mensal</span><span>Tarifa no mês</span><span>Medida e vigência</span></div>
+          <div id="driversList" class="drivers-list"></div>
+        </div>
         <aside id="driverDetail" class="driver-detail">
           <p class="section-index">LEITURA DO PRODUTO</p>
-          <h3>Selecione uma barra</h3>
-          <p>O valor mostra a contribuição do grupo HTS4. A nota tarifária, quando disponível, foi calculada a partir da composição HTS10 do grupo.</p>
+          <h3>Selecione um produto</h3>
+          <p>A tarifa e as medidas são calculadas a partir das linhas HTS10 que compõem o código no mês selecionado.</p>
         </aside>
       </div>
     </section>
 
-    <section id="metodo" class="method-section">
-      <div class="method-lead"><p class="section-index">05 / COMO LER</p><h2>Duas medidas diferentes,<br>no mesmo quadro.</h2></div>
-      <div class="method-grid">
-        <article><span>OBSERVADO</span><h3>Census</h3><p>Valor importado, valor dutiável e direitos calculados são registros mensais para consumo, agregados a partir do HTS10.</p></article>
-        <article><span>MODELADO</span><h3>Yale</h3><p>Taxas adicionais estatutárias são regras modeladas por produto, origem e data. Não equivalem aos direitos efetivamente calculados.</p></article>
-        <article><span>INTERPRETAÇÃO</span><h3>Sem causalidade automática</h3><p>Antecipação ou queda pós-tarifa é uma hipótese compatível com a série, não uma prova causal. Petróleo, aeronaves e outros itens podem dominar o mês.</p></article>
-      </div>
+    <section id="metodo" class="method-section glossary-section">
+      <div class="method-lead"><p class="section-index">04 / DEFINIÇÕES</p><h2>Conceitos usados<br>no painel.</h2><p>As estatísticas aduaneiras observadas e as tarifas estatutárias modeladas medem coisas distintas.</p></div>
+      <dl class="glossary-grid">
+        <div><dt>Importações para consumo</dt><dd>Valor das mercadorias brasileiras que entraram nos EUA para consumo ou uso. O painel usa <code>CON_VAL_MO</code>, na perspectiva do importador americano.</dd></div>
+        <div><dt>Dutiable value</dt><dd>Parcela do valor importado classificada pelo Census como sujeita a direitos aduaneiros (<code>DUT_VAL_MO</code>). Não é sinônimo do valor alcançado por todas as medidas modeladas pelo Yale.</dd></div>
+        <div><dt>Direitos calculados</dt><dd>Direitos associados às entradas do mês no Census (<code>CAL_DUT_MO</code>). Não devem ser interpretados como a alíquota estatutária de uma linha HTS10.</dd></div>
+        <div><dt>Tarifa adicional modelada</dt><dd>Alíquota adicional do Yale Tariff Rate Tracker por HTS10, origem e data. No mês, a taxa é ponderada pelos dias de vigência.</dd></div>
+        <div><dt>Potencialmente tarifado</dt><dd>Participação do valor importado associada a uma tarifa adicional modelada maior que zero. Indica exposição estatutária, não o direito efetivamente recolhido.</dd></div>
+        <div><dt>Tarifa adicional média</dt><dd>Média das tarifas adicionais ponderada pelo valor importado de cada HTS10. A faixa superior <strong>&gt;40%</strong> é predominantemente composta por taxas de 50%; casos excepcionais mais altos ficam consolidados nela.</dd></div>
+      </dl>
     </section>
 
-    <section id="auditoria" class="audit-section">
-      <div class="section-head compact"><div><p class="section-index">06 / AUDITORIA</p><h2>O que entrou nesta versão</h2></div><button id="copyAudit" class="quiet-button">Copiar manifesto</button></div>
-      <div id="auditGrid" class="audit-grid"></div>
-      <details><summary>Metodologia do cruzamento</summary><div class="details-copy"><p>Os movimentos são calculados como diferença do valor para consumo de cada HTS4 contra o mês anterior. A contribuição bruta divide o valor absoluto do movimento do produto pela soma dos movimentos absolutos do mês.</p><p>Quando a camada HTS10 do Yale está disponível, a taxa mensal deve ser ponderada pelos dias de vigência de cada regime dentro do mês. A fotografia de fim de mês é preservada separadamente. Meses de transição não recebem retroativamente a taxa do último dia.</p></div></details>
-    </section>
   </main>
 
-  <footer class="shell"><div><strong>Brasil × tarifas dos EUA</strong><span>projeto aberto e reproduzível</span></div><div class="footer-links"><a href="https://api.census.gov/data/timeseries/intltrade/imports/hs" target="_blank" rel="noreferrer">U.S. Census API</a><a href="https://github.com/Budget-Lab-Yale/tariff-rate-tracker" target="_blank" rel="noreferrer">Yale tracker</a><a href="https://github.com/FelipeRamon123" target="_blank" rel="noreferrer">GitHub</a></div></footer>
+  <footer class="shell"><div><strong>Tarifas dos EUA na pauta exportadora brasileira</strong><span>Atualização mensal · código e documentação sob licença MIT</span></div><div class="footer-links"><a href="https://api.census.gov/data/timeseries/intltrade/imports/hs" target="_blank" rel="noreferrer">Dados: U.S. Census</a><a href="https://github.com/Budget-Lab-Yale/tariff-rate-tracker" target="_blank" rel="noreferrer">Metodologia: Yale</a><a href="https://github.com/FelipeRamon123/us-brazil-tariff-monitor" target="_blank" rel="noreferrer">Código e documentação</a><a href="https://github.com/FelipeRamon123/us-brazil-tariff-monitor/blob/main/LICENSE" target="_blank" rel="noreferrer">Licença MIT</a></div></footer>
   <script src="assets/app.js"></script>
 </body>
 </html>

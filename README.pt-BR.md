@@ -1,18 +1,24 @@
-# Brasil × tarifas dos EUA
+# Tarifas dos EUA na pauta exportadora brasileira
 
 [English](README.md) · Dashboard GitHub Pages pronto para publicação
 
 Monitor mensal das importações dos Estados Unidos provenientes do Brasil, com decomposição dos produtos que explicam cada alta ou queda e uma faixa cronológica das medidas tarifárias modeladas pelo **Tariff Rate Tracker**, do The Budget Lab at Yale.
 
+Este repositório é uma **showcase**: a aplicação e os dados processados ficam aqui, enquanto os conectores reutilizáveis e exemplos de acesso às fontes pertencem ao [Official Data API Toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit).
+
+**[Abrir o preview público do dashboard →](https://us-brazil-tariff-monitor.feliperamondbr.chatgpt.site)**
+
 ## O que o projeto entrega
 
 - série mensal de importações para consumo no nível HTS10, a partir de janeiro de 2025;
-- gráfico interativo com todos os marcos relevantes das Seções 232, 301, 201 e 122 e da IEEPA;
-- clique no mês para ver as maiores altas e quedas por HTS4;
-- área empilhada em 100% da pauta por sete faixas de tarifa adicional, com média ponderada, cobertura do cruzamento e migração mensal entre faixas;
+- gráfico interativo principal com modos de composição relativa e valor absoluto, seleção de faixas e exibição opcional dos marcos tarifários e valores mensais;
+- clique no mês para ver as maiores altas e quedas por SH2, SH4, SH6, HTS8 ou HTSUS10;
+- nomes oficiais em português para SH2/SH4/SH6 e contexto SH6 em português para os desdobramentos americanos HTS8/HTSUS10;
+- tarifa adicional média no mês, medida aplicável e início de vigência diretamente na tabela de produtos;
+- área empilhada em 100% da pauta por seis faixas de tarifa adicional, com média ponderada, cobertura do cruzamento e migração mensal entre faixas;
 - valor antes/depois, variação absoluta, percentual e contribuição para o movimento do mês;
 - taxa estatutária adicional média e parcela exposta quando o painel HTS10 do Yale está disponível;
-- visão explícita de auditoria: competência, linhas, duplicidades, hash e versão das fontes;
+- controles internos de qualidade, hashes e versões das fontes preservados nos arquivos de dados e nos testes, sem exposição na interface de portfólio;
 - atualização automática e publicação no GitHub Pages.
 
 ## Fontes
@@ -21,10 +27,22 @@ Monitor mensal das importações dos Estados Unidos provenientes do Brasil, com 
    Endpoint: `https://api.census.gov/data/timeseries/intltrade/imports/hs`  
    Filtros: `CTY_CODE=3510`, `COMM_LVL=HS10`, `SUMMARY_LVL=DET`, `SUMMARY_LVL2=HSCY`.  
    Medidas mensais: `CON_VAL_MO`, `GEN_VAL_MO`, `DUT_VAL_MO`, `CAL_DUT_MO` e quantidades.
+   Código reutilizável: [módulo U.S. Census do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/main/sources/us-census).
 
 2. **The Budget Lab at Yale — Tariff Rate Tracker**  
    Repositório: <https://github.com/Budget-Lab-Yale/tariff-rate-tracker>  
    O workflow registra tag, data e URL exatas da release. Taxas são estatutárias modeladas, não direitos efetivamente recolhidos.
+   Código reutilizável proposto: [módulo Yale do toolkit](https://github.com/FelipeRamon123/official-data-api-toolkit/tree/review/yale-tariff-tracker-module/sources/yale-tariff-rate-tracker).
+
+3. **Receita Federal — Sistema Classif / NCM**
+   JSON oficial: `https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json`
+   O workflow atualiza as descrições em português de SH2, SH4 e SH6. HTS8 e HTSUS10 são desdobramentos próprios dos EUA: nesses níveis, o painel mostra o contexto oficial SH6 em português e conserva o detalhe HTSUS americano como referência.
+
+## Revisão antes da publicação
+
+Mudanças de código e metodologia são preparadas em branches `review/*` e apresentadas em Pull Request. A branch `main` permanece como versão aprovada. O preview público pode ser atualizado com a branch de revisão sem tornar o repositório público nem fazer merge.
+
+O procedimento completo de aprovação, publicação e rollback está em [docs/REVIEW_AND_RELEASE.md](docs/REVIEW_AND_RELEASE.md).
 
 ## Publicar no seu GitHub
 
@@ -59,4 +77,10 @@ Veja [docs/API_E_METODO.md](docs/API_E_METODO.md) para os trechos reutilizáveis
 ## Limite interpretativo
 
 Uma alta antes de uma tarifa ou uma queda posterior é evidência descritiva compatível com antecipação ou impacto, mas não demonstra causalidade sozinha. A composição mensal pode ser dominada por petróleo, aeronaves ou operações extraordinárias. O dashboard mantém esse cuidado no texto de cada produto.
+
+## Licença e condições de uso
+
+O código-fonte e a documentação produzidos neste repositório são disponibilizados sob a [licença MIT](LICENSE). Dados e classificações de terceiros permanecem sujeitos aos termos, revisões e condições das respectivas fontes; a licença do repositório não os relicencia.
+
+A proveniência técnica de cada atualização - competência do Census, release do Yale, cobertura do cruzamento e verificações de integridade - é registrada em `data/audit.json`. Mudanças metodológicas seguem o fluxo documentado de revisão, release e rollback.
 
