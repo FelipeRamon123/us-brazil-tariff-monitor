@@ -4,12 +4,12 @@
   "country_code": "3510",
   "first_period": "2025-01",
   "latest_period": "2026-09",
-  "rows": 54593,
+  "rows": 97911,
   "unique_htsus10": 7389,
-  "generated_at": "2026-11-09T00:41:48.462565+00:00",
+  "generated_at": "2026-11-09T22:25:43.903163+00:00",
   "census": {
     "endpoint": "https://api.census.gov/data/timeseries/intltrade/imports/hs",
-    "sha256": "ae358b79244b3bbd595083b38c902f806035d42b68608cea235f76f9ac76b2d4"
+    "sha256": "53610dc3d69a52f72a02bc9b9c81bdc585acad878507007040fd3e1a14486765"
   },
   "yale": {
     "repository": "https://github.com/Budget-Lab-Yale/tariff-rate-tracker",
