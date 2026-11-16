@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 import requests
@@ -15,7 +16,11 @@ def main() -> None:
     parser.add_argument("--metadata", default="data/raw/yale_release.json")
     args = parser.parse_args()
     headers = {"Accept": "application/vnd.github+json", "User-Agent": "us-brazil-tariff-monitor"}
-    release = requests.get(f"{API}/releases/latest", headers=headers, timeout=60).json()
+    if os.getenv("GH_TOKEN"):
+        headers["Authorization"] = f"Bearer {os.environ['GH_TOKEN']}"
+    response = requests.get(f"{API}/releases/latest", headers=headers, timeout=60)
+    response.raise_for_status()
+    release = response.json()
     assets = release.get("assets", [])
     zip_assets = [a for a in assets if a.get("name", "").endswith(".zip")]
     if not zip_assets:

@@ -41,7 +41,7 @@ Reusable connectors: [U.S. Census module](https://github.com/FelipeRamon123/offi
 
 Code and methodology changes are prepared on `review/*` branches and submitted as Pull Requests. `main` remains the approved version. See [docs/REVIEW_AND_RELEASE.md](docs/REVIEW_AND_RELEASE.md) for preview, approval and rollback instructions.
 
-The weekly schedule probes the Census API for newly published months. A monthly schedule also refreshes the large Yale release asset. Both source cutoffs are stored separately so the dashboard never silently presents mismatched vintages.
+On the 15th of each month, the workflow checks the Census API and refreshes the Yale release asset. This allows time after scheduled Census releases, though their calendar may change. Source cutoffs are stored separately.
 
 ## Local preview
 
