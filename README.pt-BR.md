@@ -67,7 +67,7 @@ O procedimento completo de aprovação, publicação e rollback está em [docs/R
 4. Em **Settings → Pages**, escolha **GitHub Actions** como fonte.
 5. Abra **Actions → Update data and deploy Pages → Run workflow**.
 
-O cron semanal procura uma nova competência do Census. No dia 15 de cada mês, o workflow também verifica e extrai a release mais recente do Yale. Se a competência mais nova ainda não estiver publicada, a tentativa é registrada e o último mês válido permanece no dashboard.
+No dia 15 de cada mês, o workflow procura uma nova competência do Census e verifica a release mais recente do Yale. A data oferece uma margem após as divulgações previstas, mas o calendário do Census pode mudar. Se a competência mais nova ainda não estiver publicada, a tentativa é registrada e o último mês válido permanece no dashboard.
 
 ## Rodar localmente
 
